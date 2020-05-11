@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -30,8 +30,7 @@ var serveCmd = &cobra.Command{
 expose the API endpoints for the service
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
-		fmt.Printf(viper.GetString("server::ip"))
+		log.Printf(">>> memory-notes web service is ready to receive requests on: [%s:%s]\n", viper.GetString("server.ip"), viper.GetString("server.port"))
 	},
 }
 
@@ -39,9 +38,13 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 
 	// Here you will define your flags and configuration settings.
-	serveCmd.Flags().String("ip", "0.0.0.0", "IP address for the server to listen to")
-	serveCmd.Flags().Int("port", 44666, "Port to run application server on")
+	serveCmd.Flags().StringP("server.ip", "i", "0.0.0.0", "IP address for the server to listen to")
+	serveCmd.Flags().IntP("server.port", "p",44666, "Port to run application server on")
+	serveCmd.Flags().StringP("web.domain", "d", "http://localhost:44666", "Set the domain to be used for URL generation")
+	serveCmd.Flags().String("web.cors", "http://localhost:44666", "Set the CORS header config")
 
-	viper.BindPFlag("server::ip", serveCmd.Flags().Lookup("ip"))
-	viper.BindPFlag("server::port", serveCmd.Flags().Lookup("port"))
+	viper.BindPFlags(serveCmd.Flags())
+
+	//viper.BindPFlag("server.ip", serveCmd.Flags().Lookup("ip"))
+	//viper.BindPFlag("server.port", serveCmd.Flags().Lookup("port"))
 }

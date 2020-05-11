@@ -47,8 +47,8 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	// change the separator from dot (.) to double colons (::)
-	viper.NewWithOptions(viper.KeyDelimiter("::"))
+
+	viper.SetEnvPrefix("SN")
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
