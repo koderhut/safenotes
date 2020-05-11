@@ -16,21 +16,73 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
+	"github.com/koderhut/safenotes/static"
+	"github.com/koderhut/safenotes/staticsite"
 	"log"
+	"os"
+	"os/signal"
+	"time"
 
+	"github.com/gorilla/mux"
+	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/note"
+	"github.com/koderhut/safenotes/webapp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
+var cfg config.Parameters
+
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Start the webservice",
+	Short: "Start the webservice server",
 	Long: `Start a HTTP(s) server that will both provide the front-end and
 expose the API endpoints for the service
 	`,
+
+
 	Run: func(cmd *cobra.Command, args []string) {
+		wait :=  time.Second * 15
+		webRoutes := []webapp.WebRouting{note.NewWebApi()}
+
+		if cfg.Server.ServerStatic {
+			webRoutes = append(webRoutes, staticsite.NewHandler())
+		}
+
+		router := webapp.BootstrapRouter(&cfg, webRoutes...)
+		srv := webapp.BootstrapServer(cfg, router)
+
 		log.Printf(">>> memory-notes web service is ready to receive requests on: [%s:%s]\n", viper.GetString("server.ip"), viper.GetString("server.port"))
+
+		if cfg.Server.Debug {
+			go func() {
+				log.Printf("*** Registered routes ****")
+				router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+					routePath, _ := route.GetPathTemplate()
+					methods, _ := route.GetMethods()
+
+					log.Printf("Route: %s \t Methods: %s\n", routePath, methods)
+
+					return nil
+				})
+				log.Printf("*******")
+			}()
+		}
+
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt, os.Kill)
+
+		<-c
+
+		ctx, cancel := context.WithTimeout(context.Background(), wait)
+		defer cancel()
+		srv.Shutdown(ctx)
+
+		log.Println(">>> memory-notes web service has shutdown")
+
+		os.Exit(0)
 	},
 }
 
@@ -38,13 +90,8 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 
 	// Here you will define your flags and configuration settings.
-	serveCmd.Flags().StringP("server.ip", "i", "0.0.0.0", "IP address for the server to listen to")
-	serveCmd.Flags().IntP("server.port", "p",44666, "Port to run application server on")
-	serveCmd.Flags().StringP("web.domain", "d", "http://localhost:44666", "Set the domain to be used for URL generation")
-	serveCmd.Flags().String("web.cors", "http://localhost:44666", "Set the CORS header config")
-
-	viper.BindPFlags(serveCmd.Flags())
-
-	//viper.BindPFlag("server.ip", serveCmd.Flags().Lookup("ip"))
-	//viper.BindPFlag("server.port", serveCmd.Flags().Lookup("port"))
+	//serveCmd.Flags().StringP("server.ip", "i", "0.0.0.0", "IP address for the server to listen to")
+	//serveCmd.Flags().IntP("server.port", "p", 44666, "Port to run application server on")
+	//
+	//viper.BindPFlags(serveCmd.Flags())
 }

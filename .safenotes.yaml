@@ -1,7 +1,12 @@
+app: nil
+
 server:
-  ip: 127.0.0.1
-  port: 33333
+  ip: 0.0.0.0
+  port: 44666
+  debug: true
+  server-static: false
 
 web:
   domain: sn.cs.local
-  cors: "http://localhost:444666"
+  cors-host: "http://localhost:444666/cors"
+  path-prefix: /api

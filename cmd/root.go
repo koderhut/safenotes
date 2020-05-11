@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -31,6 +32,12 @@ var rootCmd = &cobra.Command{
 	Use:   "safenotes",
 	Short: "Self-hosted safe notes sharing",
 	Long: ``,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		err := viper.Unmarshal(&cfg)
+		if err != nil {
+			log.Fatalf("unable to decode into struct, %v", err)
+		}
+	},
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
