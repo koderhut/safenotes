@@ -16,11 +16,12 @@ limitations under the License.
 package staticsite
 
 import (
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	
+	"github.com/gorilla/mux"
 )
 
 type StaticSite struct {
@@ -43,10 +44,6 @@ func (sw StaticSite) RegisterRoutes(r *mux.Router) {
 	app.Methods(http.MethodGet).Handler(http.StripPrefix("/app", sw))
 }
 
-// ServeHTTP inspects the URL path to locate a file within the static dir
-// on the SPA handler. If a file is found, it will be served. If not, the
-// file located at the index path on the SPA handler will be served. This
-// is suitable behavior for serving an SPA (single page application).
 func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// get the absolute path to prevent directory traversal
 	path, err := filepath.Abs(r.URL.Path)
@@ -65,7 +62,9 @@ func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	_, err = os.Stat(path)
 
 	if os.IsNotExist(err) {
-		http.NotFound(w, r)
+		// if path does not exist pass index.html instead
+		// basically sending the front-controller for the frontend app
+		http.ServeFile(w, r, filepath.Join(sw.staticPath, sw.index))
 		return
 	} else if err != nil {
 		// if we got an error (that wasn't that the file doesn't exist) stating the
