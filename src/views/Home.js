@@ -8,7 +8,7 @@ const Home = () => {
     return (
         <div id="wrapper" className="homepage flex flex-col mx-2 ">
             <div className="w-full md:w-10/12 lg:w-8/12 mx-auto shadow-lg">
-                <EncryptedForm storageUrl="http://localhost:44666/api/notes" />
+                <EncryptedForm />
             </div>
 
             <PinnedMessage>
