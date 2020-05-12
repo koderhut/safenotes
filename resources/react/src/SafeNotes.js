@@ -9,7 +9,7 @@ import ViewNote from './views/ViewNote'
 
 function SafeNotes () {
     return (
-        <Router>
+        <Router basename="/app">
             <div className="SafeNotes container mx-auto flex flex-col px-2">
                 <Header />
 

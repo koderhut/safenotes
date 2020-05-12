@@ -5,7 +5,7 @@ import ModalMessage                    from '../shared/ModalMessage'
 import ContentInput                    from './ContentInput'
 import Passphrase                      from './Passphrase'
 
-const EncryptedForm = () => {
+const EncryptedForm = (props) => {
     const notesForm = {
         content:    '',
         passphrase: '',
@@ -49,6 +49,7 @@ const EncryptedForm = () => {
     }
 
     const generateLink = () => {
+        console.log(props)
         return appCfg.web.domain + '/view-note/' + noteId
     }
 

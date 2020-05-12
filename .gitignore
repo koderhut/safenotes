@@ -1,5 +1,5 @@
 
 built/*
 !built/.gitkeep
-resources/built/*
-!resources/built/.gitkeep
+resources/react/.env.production
+resources/react/.env.local

@@ -1,9 +1,9 @@
 import Axios from 'axios'
 
 class StorageEngine {
-    static #ROUTE_NOTES = '/api/notes'
+    static #ROUTE_NOTES = '/notes'
 
-    client
+    client = ''
 
     constructor (storagePath) {
         this.client = Axios.create({
@@ -20,7 +20,7 @@ class StorageEngine {
     }
 
     fetch (path, params = {}) {
-        return Axios.get(StorageEngine.#ROUTE_NOTES + '/' + path, { ...params })
+        return this.client.get(StorageEngine.#ROUTE_NOTES + '/' + path, { ...params })
     }
 }
 
