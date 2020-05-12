@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+    node:
+        image: node:latest
+        container_name: react-learn
+        volumes:
+            - ./:/project
+        working_dir: /project
+        userns_mode: host
+        network_mode: host
+        tty: true
