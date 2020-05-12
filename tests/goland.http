@@ -1,0 +1,108 @@
+
+### get current stats
+GET http://localhost:44666/stats
+Accept: application/json
+
+> {%
+client.global.set("stored-notes",response.body['stored-notes']);
+client.global.set("total-notes", response.body['total-notes']);
+
+%}
+
+
+
+### add a new note
+POST http://localhost:44666/api/notes
+Content-Type: application/json
+
+{"content":  "this is a secret message"}
+
+> {%
+client.test("note added", function() {
+    client.assert(response.status === 200, "Response status code should be 200")
+    client.assert(response.body["link-id"] !== "", "Link ID should not be empty")
+})
+%}
+
+
+
+### add a second note and store its uid
+POST http://localhost:44666/api/notes
+Content-Type: application/json
+
+{"content":  "this is a secret message2"}
+
+> {%
+client.test("note added", function() {
+    client.assert(response.status === 200, "Response status code should be 200")
+    client.assert(response.body["link-id"] !== "", "Link ID should not be empty")
+})
+
+client.global.set("uid", response.body["note-id"])
+%}
+
+
+
+### check stats
+GET http://localhost:44666/stats
+Accept: application/json
+
+> {%
+stored = parseInt(client.global.get("stored-notes")) + 2;
+totals = parseInt(client.global.get("total-notes")) + 2;
+
+client.test("Stats", function() {
+    client.assert(response.body["stored-notes"] === stored, "Wrong number of stored notes")
+    client.assert(response.body["total-notes"] === totals, "Wrong number of total notes")
+    // update number of notes
+    client.global.set("stored-notes", response.body['stored-notes'])
+    client.global.set("total-notes", response.body['total-notes'])
+})
+
+%}
+
+
+
+
+###
+GET http://localhost:44666/api/notes/{{uid}}
+Accept: application/json
+
+> {%
+client.test("note content was retrieved", function() {
+    client.assert(response.status === 200, "Response status code should be 200")
+    client.assert(response.body["content"] === "this is a secret message2", "Note content should not be empty")
+})
+
+%}
+
+
+###
+GET http://localhost:44666/stats
+Accept: application/json
+
+> {%
+stored = parseInt(client.global.get("stored-notes")) - 1;
+totals = parseInt(client.global.get("total-notes"));
+
+client.test("Stats", function() {
+    client.assert(response.body["stored-notes"] === stored, "Wrong number of stored notes")
+    client.assert(response.body["total-notes"] === totals, "Wrong number of total notes")
+    // update number of notes
+    client.global.set("stored-notes", response.body['stored-notes'])
+})
+%}
+
+
+
+
+### Error
+GET http://localhost:44666/api/notes/{{uid}}
+Accept: application/json
+
+> {%
+ client.test("404 note not found", function() {
+     client.assert(response.status === 404, "Response status code should be 404")
+ })
+ %}
+
