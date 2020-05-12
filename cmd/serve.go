@@ -17,7 +17,6 @@ package cmd
 
 import (
 	"context"
-	"github.com/koderhut/safenotes/static"
 	"github.com/koderhut/safenotes/staticsite"
 	"log"
 	"os"
@@ -45,30 +44,29 @@ expose the API endpoints for the service
 
 	Run: func(cmd *cobra.Command, args []string) {
 		wait :=  time.Second * 15
-		webRoutes := []webapp.WebRouting{note.NewWebApi()}
+		apiRoutes := []webapp.WebRouting{note.NewWebApi()}
+		rootRoutes := []webapp.WebRouting{}
 
-		if cfg.Server.ServerStatic {
-			webRoutes = append(webRoutes, staticsite.NewHandler())
+		if cfg.Server.Static.Serve == true {
+			rootRoutes = append(rootRoutes, staticsite.NewHandler(cfg.Server.Static.Resources, cfg.Server.Static.Index))
 		}
 
-		router := webapp.BootstrapRouter(&cfg, webRoutes...)
+		router := webapp.BootstrapRouter(&cfg, apiRoutes, rootRoutes)
 		srv := webapp.BootstrapServer(cfg, router)
 
 		log.Printf(">>> memory-notes web service is ready to receive requests on: [%s:%s]\n", viper.GetString("server.ip"), viper.GetString("server.port"))
 
 		if cfg.Server.Debug {
-			go func() {
-				log.Printf("*** Registered routes ****")
-				router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-					routePath, _ := route.GetPathTemplate()
-					methods, _ := route.GetMethods()
+			log.Printf("*** Registered routes ****")
+			router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+				routePath, _ := route.GetPathTemplate()
+				methods, _ := route.GetMethods()
 
-					log.Printf("Route: %s \t Methods: %s\n", routePath, methods)
+				log.Printf("Route: %s \t Methods: %s\n", routePath, methods)
 
-					return nil
-				})
-				log.Printf("*******")
-			}()
+				return nil
+			})
+			log.Printf("*******")
 		}
 
 		c := make(chan os.Signal, 1)
@@ -89,9 +87,4 @@ expose the API endpoints for the service
 func init() {
 	rootCmd.AddCommand(serveCmd)
 
-	// Here you will define your flags and configuration settings.
-	//serveCmd.Flags().StringP("server.ip", "i", "0.0.0.0", "IP address for the server to listen to")
-	//serveCmd.Flags().IntP("server.port", "p", 44666, "Port to run application server on")
-	//
-	//viper.BindPFlags(serveCmd.Flags())
 }

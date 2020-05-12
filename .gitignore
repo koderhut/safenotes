@@ -1,3 +1,5 @@
 
 built/*
 !built/.gitkeep
+resources/built/*
+!resources/built/.gitkeep

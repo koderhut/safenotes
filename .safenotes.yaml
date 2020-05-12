@@ -4,9 +4,12 @@ server:
   ip: 0.0.0.0
   port: 44666
   debug: true
-  server-static: false
+  static-site:
+    serve: true
+    index: index.html
+    resources: built/static/
 
 web:
-  domain: sn.cs.local
-  cors-host: "http://localhost:444666/cors"
+  domain: localhost
+  cors-host: "http://localhost:444666"
   path-prefix: /api
