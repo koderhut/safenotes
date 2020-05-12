@@ -21,12 +21,14 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/koderhut/safenotes/config"
 	"github.com/koderhut/safenotes/note"
 	"github.com/koderhut/safenotes/webapp"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -58,15 +60,20 @@ expose the API endpoints for the service
 
 		if cfg.Server.Debug {
 			log.Printf("*** Registered routes ****")
+
+			table := tablewriter.NewWriter(os.Stdout)
+			table.SetHeader([]string{"Route", "Methods", "Name"})
+
 			router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 				routePath, _ := route.GetPathTemplate()
 				methods, _ := route.GetMethods()
 
-				log.Printf("Route: %s \t Methods: %s\n", routePath, methods)
+				table.Append([]string{routePath, strings.Join(methods, ", "), route.GetName()})
 
 				return nil
 			})
-			log.Printf("*******")
+			table.Render()
+			log.Printf("***\n")
 		}
 
 		c := make(chan os.Signal, 1)
