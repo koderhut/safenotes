@@ -2,12 +2,11 @@ import React from 'react'
 
 const ContentInput = (props) => {
     return (
-        <div className="flex flex-col p-2">
-            <label className="text-xl text-gray-500 font-bold mt-2">Sensitive Content</label>
+        <div className="flex flex-col pt-2">
             <textarea
                 id="content"
                 name={props.name}
-                className="my-2 p-2 border-t-2 border-b-2 border-blue-500 rounded shadow-sm min-h-10"
+                className="shadow-sm rounded-xs bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 rows="10"
                 placeholder="Sensitive Content"
                 required

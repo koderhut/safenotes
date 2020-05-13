@@ -7,7 +7,11 @@ const Home = () => {
 
     return (
         <div id="wrapper" className="homepage flex flex-col mx-2 ">
-            <div className="w-full md:w-10/12 lg:w-8/12 mx-auto shadow-lg">
+            <div className="text-center text-xl sm:text-2xl font-bold text-gray-500 md:w-10/12 lg:w-8/12 align-middle mx-auto capitalize my-4">
+                <p>Keep sensitive information safe</p>
+                <p className="text-sm sm:text-base">Use a secure sharing system</p>
+            </div>
+            <div className="w-full md:w-10/12 lg:w-8/12 mx-auto xshadow-lg">
                 <EncryptedForm />
             </div>
 
