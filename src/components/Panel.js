@@ -31,7 +31,7 @@ const Panel = (props) => {
             updateActiveButton(openPanel ? closeButton : openButton);
             updatePanelViewClass(openPanel ? "open-panel" : "closed-panel");
         }
-    }, [openPanel])
+    }, [openPanel, closeButton, openButton, props.closable])
 
     // we don't display the panel if there are no children
     if (props.children === undefined) {
