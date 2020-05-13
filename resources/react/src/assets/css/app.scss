@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  background-color: #f7fafc;
+//   background-color: #f7fafc;
 }
 
 .wrong-value {
@@ -30,4 +30,12 @@ body {
 
 .bg-semi-75 {
   background-color: rgba(0, 0, 0, 0.75);
+}
+
+.open-panel {
+    display: block;
+}
+
+.closed-panel {
+    display: none;
 }
