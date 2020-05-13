@@ -10,7 +10,8 @@ import * as serviceWorker from './serviceWorker'
 
 let AppConfig = {
     ...config,
-    storage: new StorageEngine(config.web.storage_path),
+    ...window.snenv,
+    storage: new StorageEngine(window.snenv.web.storage_path),
 }
 
 ReactDOM.render(
