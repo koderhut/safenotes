@@ -11,5 +11,5 @@ server:
 
 web:
   domain: localhost
-  cors-host: "http://localhost:444666"
+  cors-host: "http://localhost:44666"
   path-prefix: /api
