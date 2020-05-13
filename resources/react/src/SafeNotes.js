@@ -14,7 +14,7 @@ function SafeNotes () {
                 <Header />
 
                 <Switch>
-                    <Route exact={true} path="/" component={Home} />
+                    <Route exact={true} path="/" name={"home"}  component={Home} />
                     <Route exact={true} path="/view-note/:noteId" component={ViewNote} />
                 </Switch>
             </div>

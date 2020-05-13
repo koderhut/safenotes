@@ -1,21 +1,21 @@
-import CryptoJS from 'crypto-js'
+import CryptoJS                      from 'crypto-js'
 import React, {useContext, useState} from 'react'
-import {ConfigContext} from '../context/Config'
-import ModalMessage from '../shared/ModalMessage'
-import ContentInput from './ContentInput'
-import Passphrase from './Passphrase'
-import ExpireTimeframe from "./ExpireTimeframe";
-import Panel from "../Panel";
+import {ConfigContext}               from '../context/Config'
+import ContentInput                  from './ContentInput'
+import Passphrase                    from './Passphrase'
+import ExpireTimeframe               from "./ExpireTimeframe";
+import Panel                         from "../Panel";
+import SendSuccess                   from "../../modals/Note/SendSuccess";
 
 const EncryptedForm = (props) => {
-    const notesForm = {
-        content: '',
+    const notesForm                            = {
+        content:    '',
         passphrase: '',
     }
-    const [noteId, setNoteId] = useState('')
+    const [noteId, setNoteId]                  = useState('')
     const [encryptedForm, updateEncryptedForm] = useState(notesForm)
-    const appCfg = useContext(ConfigContext)
-    const storage = appCfg.storage
+    const appCfg                               = useContext(ConfigContext)
+    const storage                              = appCfg.storage
 
     const updateForm = (data) => {
         updateEncryptedForm({
@@ -51,7 +51,6 @@ const EncryptedForm = (props) => {
     }
 
     const generateLink = () => {
-        console.log(props)
         return appCfg.web.domain + '/view-note/' + noteId
     }
 
@@ -66,7 +65,7 @@ const EncryptedForm = (props) => {
                     <Panel title={"Privacy"} stylesClass={"my-6"}>
                         <Passphrase name="passphrase" form={encryptedForm} onChange={updateForm}/>
 
-                        <ExpireTimeframe options={appCfg.app.timeframe} />
+                        {/*<ExpireTimeframe options={appCfg.app.timeframe} />*/}
                     </Panel>
                 </div>
 
@@ -77,15 +76,7 @@ const EncryptedForm = (props) => {
                     />
                 </div>
 
-                {noteId !== '' ? (
-                    <ModalMessage reset={resetForm}>
-                        <h3 className="text-3xl text-gray-500 font-bold">Success!</h3>
-                        <hr className="bg-gray-700 mb-4"/>
-                        <p className="text-lg lg:text-xl text-gray-600 pb-4">You can copy the link below and send it to
-                            the recipient:</p>
-                        <p className="text-lg text-blue-500 underline">{generateLink()}</p>
-                    </ModalMessage>
-                ) : null}
+                {noteId !== '' ? <SendSuccess closeHandler={resetForm} link={generateLink()}/> : null}
             </form>
         </div>
     )
