@@ -1,0 +1,15 @@
+app: nil
+
+server:
+  ip: 0.0.0.0
+  port: 80
+  debug: false
+  static-site:
+    serve: true
+    index: index.html
+    resources: /safenotes/react/
+
+web:
+  domain: localhost
+  cors-host: "http://localhost"
+  path-prefix: /api
