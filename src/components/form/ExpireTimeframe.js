@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState} from "react";
 
-const ExpireTimeframe = (props) => {
+const ExpireTimeframe = ({opts}) => {
     const [selected, setSelected] = useState();
 
-    const options = props.options.map((opt, index) => {
+    const options = opts.map((opt, index) => {
         return <option key={index} value={opt.value}>{opt.label}</option>;
-    })
+    });
 
     return (
         <>
@@ -25,7 +25,11 @@ const ExpireTimeframe = (props) => {
                 </div>
             </div>
         </>
-    )
+    );
+};
+
+ExpireTimeframe.defaultProps = {
+    options: [],
 }
 
-export default ExpireTimeframe
+export default ExpireTimeframe;
