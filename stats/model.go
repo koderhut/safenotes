@@ -15,5 +15,9 @@ func (s *Stats) Inc() {
 }
 
 func (s *Stats) Decr() {
+	if s.Current == 0 {
+		return
+	}
+
 	s.Current--
 }
