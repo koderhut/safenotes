@@ -41,7 +41,7 @@ func (sw StaticSite) RegisterRoutes(r *mux.Router) {
 
 	// static app will be served from /app
 	app := r.Name("app_root").PathPrefix("/app/").Subrouter()
-	app.Methods(http.MethodGet).Handler(http.StripPrefix("/app", sw))
+	app.Name("app_static").Methods(http.MethodGet).Handler(http.StripPrefix("/app", sw))
 }
 
 func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
