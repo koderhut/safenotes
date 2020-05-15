@@ -78,8 +78,8 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".safenotes" (without extension).
 		viper.AddConfigPath(".")
+		// Search config in home directory with name ".safenotes" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".safenotes")
 	}

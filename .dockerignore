@@ -1,2 +1,3 @@
-built/
-resources/react/node_modules
+
+dist/
+webapp/react/node_modules
