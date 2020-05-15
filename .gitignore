@@ -1,6 +1,6 @@
 
 built/*
 !built/.gitkeep
-resources/react/.env.production
-resources/react/.env.local
-resources/react/public/env.js
+web/react/.env.production
+web/react/.env.local
+web/react/public/env.js
