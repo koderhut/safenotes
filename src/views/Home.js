@@ -1,18 +1,16 @@
-import React from 'react'
+import React from "react";
 
-import EncryptedForm from '../components/form/EncryptedForm'
-import PinnedMessage from '../components/shared/PinnedMessage'
+import EncryptedForm from "../components/form/EncryptedForm";
+import PinnedMessage from "../components/shared/PinnedMessage";
+import Quote from "../components/ui/Quote";
 
 const Home = () => {
 
     return (
         <div id="wrapper" className="homepage flex flex-col mx-2 ">
-            <div className="text-center text-xl sm:text-2xl font-bold text-gray-500 md:w-10/12 lg:w-8/12 align-middle mx-auto capitalize my-4">
-                <p>Keep sensitive information safe</p>
-                <p className="text-sm sm:text-base">Use a secure sharing system</p>
-            </div>
+            <Quote />
             <div className="w-full md:w-10/12 lg:w-8/12 mx-auto xshadow-lg">
-                <EncryptedForm />
+                <EncryptedForm/>
             </div>
 
             <PinnedMessage>
@@ -23,7 +21,7 @@ const Home = () => {
             </PinnedMessage>
 
         </div>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

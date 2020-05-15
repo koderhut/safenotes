@@ -1,65 +1,66 @@
-import CryptoJS                      from 'crypto-js'
-import React, {useContext, useState} from 'react'
-import {ConfigContext}               from '../context/Config'
-import ContentInput                  from './ContentInput'
-import Passphrase                    from './Passphrase'
-import ExpireTimeframe               from "./ExpireTimeframe";
-import Panel                         from "../Panel";
-import SendSuccess                   from "../../modals/Note/SendSuccess";
+import CryptoJS from "crypto-js";
+import React, {useContext, useState} from "react";
 
-const EncryptedForm = (props) => {
-    const notesForm                            = {
-        content:    '',
-        passphrase: '',
-    }
-    const [noteId, setNoteId]                  = useState('')
-    const [encryptedForm, updateEncryptedForm] = useState(notesForm)
-    const appCfg                               = useContext(ConfigContext)
-    const storage                              = appCfg.storage
+import {ConfigContext} from "../context/Config";
+import ContentInput from "./ContentInput";
+import Passphrase from "./Passphrase";
+//eslint-disable-next-line
+import ExpireTimeframe from "./ExpireTimeframe";
+import Panel from "../Panel";
+import SendSuccess from "../../modals/Note/SendSuccess";
+
+const EncryptedForm = () => {
+    const notesForm = {
+        content:    "",
+        passphrase: "",
+    };
+
+    const [noteId, setNoteId]                  = useState("");
+    const [encryptedForm, updateEncryptedForm] = useState(notesForm);
+    const {web: webCfg, storage}               = useContext(ConfigContext);
 
     const updateForm = (data) => {
         updateEncryptedForm({
             ...encryptedForm,
             [data.name]: data.value,
-        })
-    }
+        });
+    };
 
     const resetForm = () => {
-        updateEncryptedForm(notesForm)
-        setNoteId('')
-    }
+        updateEncryptedForm(notesForm);
+        setNoteId("");
+    };
 
     const submitForm = (e) => {
-        e.preventDefault()
-        if ('' === encryptedForm.content || encryptedForm.content.length === 0) {
-            console.log('no content')
-            return
-        }
-
-        if ('' === encryptedForm.passphrase) {
-            console.log('no passphrase')
-            return
+        e.preventDefault();
+        if (("" === encryptedForm.content || encryptedForm.content.length === 0) || "" === encryptedForm.passphrase) {
+            return;
         }
 
         storage.store({
-            'content': CryptoJS.AES.encrypt(encryptedForm.content, encryptedForm.passphrase).toString(),
+            "content": CryptoJS.AES.encrypt(encryptedForm.content, encryptedForm.passphrase).toString(),
         }).then(function (response) {
-            setNoteId(response.data['note-id'])
+            setNoteId(response.data["note-id"]);
         }).catch(function (err) {
-            console.log(err)
-        })
-    }
+            console.log(err);
+        });
+    };
 
     const generateLink = () => {
-        return appCfg.web.domain + '/view-note/' + noteId
-    }
+        return webCfg.domain + "/view-note/" + noteId;
+    };
 
     return (
         <div className="flex flex-col items-center w-full bg-white mt-5">
             <form className="flex flex-col w-full" onSubmit={submitForm} action="#">
                 <div className="flex flex-col">
                     <Panel title={"Add Your Sensitive Content"}>
-                        <ContentInput name="content" form={encryptedForm} onChange={updateForm}/>
+                        <ContentInput
+                            name="content"
+                            content={encryptedForm.content}
+                            onChange={updateForm}
+                            styles="shadow-sm border border-gray-300 focus:border-gray-500 rounded rounded-xs py-3 px-4 mt-2 bg-gray-100 focus:bg-white"
+                        />
                     </Panel>
 
                     <Panel title={"Privacy"} stylesClass={"my-6"}>
@@ -76,10 +77,10 @@ const EncryptedForm = (props) => {
                     />
                 </div>
 
-                {noteId !== '' ? <SendSuccess closeHandler={resetForm} link={generateLink()}/> : null}
+                {noteId !== "" ? <SendSuccess closeHandler={resetForm} link={generateLink()}/> : null}
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default EncryptedForm
+export default EncryptedForm;

@@ -1,20 +1,36 @@
-import React from 'react'
+import React from "react";
 
 const ContentInput = (props) => {
+    const {name, placeHolder, readonly, disabled, onChange, content, styles} = props;
+    const style = "w-full text-gray-700 leading-tight focus:outline-none " + styles;
+
     return (
-        <div className="flex flex-col pt-2">
+        <>
             <textarea
                 id="content"
-                name={props.name}
-                className="shadow-sm rounded-xs bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                name={name}
+                className={style}
                 rows="10"
-                placeholder="Sensitive Content"
+                placeholder={placeHolder}
                 required
-                onChange={(e) => props.onChange(e.target)}
-                value={props.form.content}
+                readOnly={readonly}
+                disabled={disabled}
+                onChange={(e) => onChange(e.target)}
+                value={content}
             />
-        </div>
-    )
-}
+        </>
+    );
+};
 
-export default ContentInput
+ContentInput.defaultProps = {
+    name:        "content-input",
+    placeHolder: "",
+    readonly:    false,
+    disabled:    false,
+    onChange:    () => {
+    },
+    content:     "",
+    styles: "",
+};
+
+export default ContentInput;
