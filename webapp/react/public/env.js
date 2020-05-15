@@ -1,7 +1,7 @@
 window.snenv = {
   "web": {
     "storage_path": "/api",
-    "domain": "https://localhost:3000/app"
+    "domain": "https://localhost:3333/app"
   },
   "app": {
     "timeframe": [

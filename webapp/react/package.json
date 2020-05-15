@@ -23,7 +23,7 @@
     "serve-dev": "env-cmd -f .env.dev craco start",
     "build-app": "env-cmd -f .env.local craco build",
     "build-prod": "env-cmd -f .env.production craco build",
-    "prep-deply": ".tools/prep-deploy.sh",
+    "prep-deploy": ".tools/prep-deploy.sh",
     "test": "env.cmd -f .env.test craco test",
     "eject": "react-scripts eject"
   },
