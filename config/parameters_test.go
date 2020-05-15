@@ -1,7 +1,7 @@
 package config_test
 
 import (
-	"github.com/koderhut/memorynotes/config"
+	"github.com/koderhut/safenotes/config"
 	"testing"
 )
 
