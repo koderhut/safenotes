@@ -18,11 +18,13 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/koderhut/safenotes/contracts"
-	"github.com/spf13/cobra"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/spf13/cobra"
+
+	"github.com/koderhut/safenotes/webapp/contracts"
 )
 
 // statsCmd represents the stats command

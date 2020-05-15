@@ -50,7 +50,14 @@ expose the API endpoints for the service
 		rootRoutes := []webapp.WebRouting{}
 
 		if cfg.Server.Static.Serve == true {
-			rootRoutes = append(rootRoutes, staticsite.NewHandler(cfg.Server.Static.Resources, cfg.Server.Static.Index))
+			rootRoutes = append(
+				rootRoutes,
+				staticsite.NewHandler(
+					cfg.Server.Static.Resources,
+					cfg.Server.Static.Index,
+					cfg.Server.Static,
+				),
+			)
 		}
 
 		router := webapp.BootstrapRouter(&cfg, apiRoutes, rootRoutes)

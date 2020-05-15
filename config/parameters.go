@@ -38,6 +38,7 @@ type StaticSite struct {
 	Serve     bool
 	Index     string `mapstructure:"index"`
 	Resources string
+	EnvJs	  string `mapstructure:"envjs"`
 }
 
 type WebParams struct {

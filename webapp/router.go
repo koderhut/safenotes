@@ -23,8 +23,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/koderhut/safenotes/config"
-	"github.com/koderhut/safenotes/contracts"
 	"github.com/koderhut/safenotes/stats"
+	"github.com/koderhut/safenotes/webapp/contracts"
 )
 
 var noteStats = stats.New()
@@ -35,7 +35,6 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 
 	router.Use(requestLogger)
 	router.Use(noteStatsLogger)
-	router.Use(mux.CORSMethodMiddleware(router))
 	router.Use(corsAllowedHost(c.Web.CorsHost))
 
 	router.
@@ -46,9 +45,9 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 
 			json.NewEncoder(w).Encode(
 				&contracts.StatsMessage{
-					Status: true,
+					Status:      true,
 					StoredNotes: noteStats.Current,
-					TotalNotes: noteStats.Total,
+					TotalNotes:  noteStats.Total,
 				},
 			)
 		}).

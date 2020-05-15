@@ -8,6 +8,13 @@ server:
     serve: true
     index: index.html
     resources: dist/static/
+    envjs: |
+      window.snenv={
+        "web":{
+          "domain":"http://localhost:444",
+          "storage_path":"http://localhost:322/api"
+        }
+      }
 
 web:
   domain: localhost
