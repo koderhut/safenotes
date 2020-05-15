@@ -1,27 +1,27 @@
-import Axios from 'axios'
+import Axios from "axios";
 
 class StorageEngine {
-    static #ROUTE_NOTES = '/notes'
+    static #ROUTE_NOTES = "/notes";
 
-    client = ''
+    client = "";
 
-    constructor (storagePath) {
+    constructor(storagePath) {
         this.client = Axios.create({
             baseURL: storagePath,
             timeout: 1000,
-            headers: { 'X-App': 'SafeNotes' },
-        })
+            headers: {"X-App": "SafeNotes"},
+        });
     }
 
-    store (params) {
+    store(params) {
         return this.client.post(StorageEngine.#ROUTE_NOTES, {}, {
             data: params,
-        })
+        });
     }
 
-    fetch (path, params = {}) {
-        return this.client.get(StorageEngine.#ROUTE_NOTES + '/' + path, { ...params })
+    fetch(path, params = {}) {
+        return this.client.get(StorageEngine.#ROUTE_NOTES + "/" + path, {...params});
     }
 }
 
-export default StorageEngine
+export default StorageEngine;
