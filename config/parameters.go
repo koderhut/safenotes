@@ -27,17 +27,28 @@ type Parameters struct {
 	Web    WebParams
 }
 
+type Https struct {
+	Enable     bool
+	Crt        string `mapstructure:"cert"`
+	Key        string
+	ServerName string `mapstructure:"server-name"`
+	Port       string
+	RedirectTo string `mapstructure:"redirect-to"`
+}
+
 type ServerParams struct {
 	IP     string
 	Port   string
 	Debug  bool
 	Static StaticSite `mapstructure:"static-site"`
+	Https  Https
 }
 
 type StaticSite struct {
 	Serve     bool
 	Index     string `mapstructure:"index"`
 	Resources string
+	EnvJs     string `mapstructure:"envjs"`
 }
 
 type WebParams struct {
@@ -62,13 +73,24 @@ func NewConfigParams(addr, prefix, domain, cors string) (Parameters, error) {
 	return c, nil
 }
 
-// Addr returns the address in IP:port
-func (c Parameters) Addr() (string, error) {
-	if c.Server.IP == "" || c.Server.Port == "" {
+// ListeningAddr returns a string representing the HTTP listening address in IP:port format
+// or error otherwise
+func (c ServerParams) ListeningAddr() (string, error) {
+	if c.IP == "" || c.Port == "" {
 		return "", errors.New("missing IP or port information")
 	}
 
-	return fmt.Sprintf("%s:%s", c.Server.IP, c.Server.Port), nil
+	return fmt.Sprintf("%s:%s", c.IP, c.Port), nil
+}
+
+// ListeningAddr returns a string representing the HTTPS listening address in IP:port format
+// or error otherwise
+func (c ServerParams) HTTPSListeningAddr() (string, error) {
+	if c.IP == "" || c.Https.Port == "" {
+		return "", errors.New("missing IP or port information")
+	}
+
+	return fmt.Sprintf("%s:%s", c.IP, c.Https.Port), nil
 }
 
 // ParseTLD

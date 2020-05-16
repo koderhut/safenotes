@@ -1,6 +1,6 @@
 
 ### get current stats
-GET http://localhost:44666/stats
+GET {{ domain }}/stats
 Accept: application/json
 
 > {%
@@ -12,7 +12,7 @@ client.global.set("total-notes", response.body['total-notes']);
 
 
 ### add a new note
-POST http://localhost:44666/api/notes
+POST {{ domain }}/api/notes
 Content-Type: application/json
 
 {"content":  "this is a secret message"}
@@ -27,7 +27,7 @@ client.test("note added", function() {
 
 
 ### add a second note and store its uid
-POST http://localhost:44666/api/notes
+POST {{ domain }}/api/notes
 Content-Type: application/json
 
 {"content":  "this is a secret message2"}
@@ -44,7 +44,7 @@ client.global.set("uid", response.body["note-id"])
 
 
 ### check stats
-GET http://localhost:44666/stats
+GET {{ domain }}/stats
 Accept: application/json
 
 > {%
@@ -65,7 +65,7 @@ client.test("Stats", function() {
 
 
 ###
-GET http://localhost:44666/api/notes/{{uid}}
+GET {{ domain }}/api/notes/{{uid}}
 Accept: application/json
 
 > {%
@@ -78,7 +78,7 @@ client.test("note content was retrieved", function() {
 
 
 ###
-GET http://localhost:44666/stats
+GET {{ domain }}/stats
 Accept: application/json
 
 > {%
@@ -97,7 +97,7 @@ client.test("Stats", function() {
 
 
 ### Error
-GET http://localhost:44666/api/notes/{{uid}}
+GET {{ domain }}/api/notes/{{uid}}
 Accept: application/json
 
 > {%

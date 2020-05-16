@@ -20,30 +20,38 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	
+
 	"github.com/gorilla/mux"
+
+	"github.com/koderhut/safenotes/config"
 )
 
 type StaticSite struct {
 	staticPath string
 	index      string
+	config     config.StaticSite
 }
 
-func NewHandler(staticPath, index string) *StaticSite {
+// NewHandler init a new instance
+func NewHandler(staticPath, index string, cfg config.StaticSite) *StaticSite {
 	return &StaticSite{
 		staticPath: staticPath,
 		index:      index,
+		config:     cfg,
 	}
 }
 
+// RegisterRoutes helps register the routes for the SPA app
 func (sw StaticSite) RegisterRoutes(r *mux.Router) {
 	r.Path("/").Handler(http.RedirectHandler("/app/", http.StatusMovedPermanently))
 
 	// static app will be served from /app
 	app := r.Name("app_root").PathPrefix("/app/").Subrouter()
-	app.Methods(http.MethodGet).Handler(http.StripPrefix("/app", sw))
+	app.Name("app_static_envjs").Path("/env.js").Methods(http.MethodGet).HandlerFunc(sw.envJs)
+	app.Name("app_static").Methods(http.MethodGet).Handler(http.StripPrefix("/app", sw))
 }
 
+// ServeHTTP serve the React SPA app
 func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// get the absolute path to prevent directory traversal
 	path, err := filepath.Abs(r.URL.Path)
@@ -76,4 +84,12 @@ func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	http.FileServer(http.Dir(sw.staticPath)).ServeHTTP(w, r)
 
+}
+
+// envJS serve the env.js config for the React SPA
+// It helps make the SPA app more configurable
+func (sw StaticSite) envJs(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write([]byte(sw.config.EnvJs))
 }

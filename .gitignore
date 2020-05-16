@@ -1,6 +1,9 @@
 
-built/*
-!built/.gitkeep
+tmp/
+dist/*
+!dist/.gitkeep
 web/react/.env.production
 web/react/.env.local
 web/react/public/env.js
+/.safenotes.*.yaml
+built/

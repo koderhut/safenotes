@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/koderhut/memorynotes/contracts"
+	"github.com/koderhut/safenotes/webapp/contracts"
 )
 
 // NotesWebApi controller

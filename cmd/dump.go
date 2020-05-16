@@ -13,19 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package webapp
+package cmd
 
 import (
-	"context"
-	"github.com/gorilla/mux"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-type WebRouting interface {
-	RegisterRoutes(r *mux.Router)
+// dumpCmd represents the dump command
+var dumpCmd = &cobra.Command{
+	Use:   "dump",
+	Short: "Helper tools",
+	Long: ``,
+
 }
 
-type Server interface {
-	ListenAndServe() error
-	Shutdown(ctx context.Context) error
-	GetListeningAddr() string
+func init() {
+	dumpCmd.PersistentFlags().StringP("output", "o", "", "Set the output file.")
+
+	viper.BindPFlags(dumpCmd.PersistentFlags())
+
+	rootCmd.AddCommand(dumpCmd)
 }
