@@ -20,10 +20,6 @@ github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/koderhut/memorynotes v0.0.0-20200507074836-6042d748f510
-## explicit
-github.com/koderhut/memorynotes/config
-github.com/koderhut/memorynotes/contracts
 # github.com/magiconair/properties v1.8.1
 github.com/magiconair/properties
 # github.com/mattn/go-runewidth v0.0.7
