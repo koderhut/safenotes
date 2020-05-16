@@ -15,8 +15,17 @@ limitations under the License.
 */
 package webapp
 
-import "github.com/gorilla/mux"
+import (
+	"context"
+	"github.com/gorilla/mux"
+)
 
 type WebRouting interface {
 	RegisterRoutes(r *mux.Router)
+}
+
+type Server interface {
+	ListenAndServe() error
+	Shutdown(ctx context.Context) error
+	GetListeningAddr() string
 }

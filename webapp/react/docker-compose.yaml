@@ -6,7 +6,7 @@ services:
         container_name: sn-react
         volumes:
             - ./:/project
-            - ./../../built/static:/project/build
+            - ./../../dist/static:/project/build
         working_dir: /project
         userns_mode: host
         ports:

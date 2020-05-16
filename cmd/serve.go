@@ -17,7 +17,6 @@ package cmd
 
 import (
 	"context"
-	"github.com/koderhut/safenotes/staticsite"
 	"log"
 	"os"
 	"os/signal"
@@ -25,12 +24,13 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/koderhut/safenotes/config"
-	"github.com/koderhut/safenotes/note"
-	"github.com/koderhut/safenotes/webapp"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+
+	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/note"
+	"github.com/koderhut/safenotes/staticsite"
+	"github.com/koderhut/safenotes/webapp"
 )
 
 var cfg config.Parameters
@@ -45,43 +45,28 @@ expose the API endpoints for the service
 
 
 	Run: func(cmd *cobra.Command, args []string) {
-		wait :=  time.Second * 15
+		wait := time.Second * 15
 		apiRoutes := []webapp.WebRouting{note.NewWebApi()}
 		rootRoutes := []webapp.WebRouting{}
 
 		if cfg.Server.Static.Serve == true {
 			rootRoutes = append(
 				rootRoutes,
-				staticsite.NewHandler(
-					cfg.Server.Static.Resources,
-					cfg.Server.Static.Index,
-					cfg.Server.Static,
-				),
+				staticsite.NewHandler(cfg.Server.Static.Resources, cfg.Server.Static.Index, cfg.Server.Static),
 			)
 		}
 
 		router := webapp.BootstrapRouter(&cfg, apiRoutes, rootRoutes)
-		srv := webapp.BootstrapServer(cfg, router)
+		srv, err := webapp.BootstrapServer(cfg, router)
 
-		log.Printf(">>> memory-notes web service is ready to receive requests on: [%s:%s]\n", viper.GetString("server.ip"), viper.GetString("server.port"))
-
-		if cfg.Server.Debug {
-			log.Printf("*** Registered routes ****")
-
-			table := tablewriter.NewWriter(os.Stdout)
-			table.SetHeader([]string{"Route", "Methods", "Name"})
-
-			router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-				routePath, _ := route.GetPathTemplate()
-				methods, _ := route.GetMethods()
-
-				table.Append([]string{routePath, strings.Join(methods, ", "), route.GetName()})
-
-				return nil
-			})
-			table.Render()
-			log.Printf("***\n")
+		if err != nil {
+			log.Panic(err)
+			os.Exit(1)
 		}
+
+		log.Printf(">>> memory-notes web service is ready to receive requests on: [%s]\n", srv.GetListeningAddr())
+
+		debugMode(router)
 
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, os.Kill)
@@ -98,7 +83,30 @@ expose the API endpoints for the service
 	},
 }
 
-func init() {
-	rootCmd.AddCommand(serveCmd)
+func debugMode(router *mux.Router) {
+	if !cfg.Server.Debug {
+		return
+	}
 
+	log.Printf("*** Registered routes ****")
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Route", "Methods", "Name"})
+
+	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		routePath, _ := route.GetPathTemplate()
+		methods, _ := route.GetMethods()
+
+		table.Append([]string{routePath, strings.Join(methods, ", "), route.GetName()})
+
+		return nil
+	})
+	table.Render()
+	log.Printf("***\n")
+
+}
+
+func init() {
+	serveCmd.Flags().Bool("ssl", false, "Enable HTTPS")
+
+	rootCmd.AddCommand(serveCmd)
 }

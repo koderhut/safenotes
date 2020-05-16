@@ -4,6 +4,13 @@ server:
   ip: 0.0.0.0
   port: 44666
   debug: true
+  https:
+    enable: true
+    port: 443
+    redirect-to: https://localhost
+    server-name: localhost
+    cert: ./dist/cert.pem
+    key: ./dist/key.pem
   static-site:
     serve: true
     index: index.html
