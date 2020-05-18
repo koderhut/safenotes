@@ -21,5 +21,3 @@ func BootstrapServer(cfg config.Parameters, router *mux.Router) (Server, error) 
 
 	return srv, err
 }
-
-
