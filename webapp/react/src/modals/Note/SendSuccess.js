@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 import ModalMessage from "../../components/shared/ModalMessage";
 
@@ -28,8 +29,13 @@ const SendSuccess = (props) => {
                     <p className="text-sm sm:text-base text-blue-500 underline">{link}</p>
                 </div>
             </div>
-            <div className={"flex flex-col w-full"}>
-                <button className={"my-4 mx-auto w-full sm:w-1/2 p-2 bg-gray-200 hover:bg-blue-700 hover:text-white text-gray-600 border-gray-500 rounded border-2 font-extrabold w-3/4 capitalize"}
+            <div className={"flex flex-col sm:flex-row w-full"}>
+                <CopyToClipboard text={link}>
+                    <button className={"my-4 mx-auto sm: w-1/2 sm:w-1/3 p-2 bg-gray-200 hover:bg-blue-700 hover:text-white text-gray-600 border-gray-500 rounded border-2 font-extrabold w-3/4 capitalize"}
+                    >Copy to clipboard
+                    </button>
+                </CopyToClipboard>
+                <button className={"my-4 mx-auto w-1/2 sm:w-1/3 p-2 bg-gray-200 hover:bg-blue-700 hover:text-white text-gray-600 border-gray-500 rounded border-2 font-extrabold w-3/4 capitalize"}
                         onClick={closeHandler}
                 >Prepare a new note
                 </button>

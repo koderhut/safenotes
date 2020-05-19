@@ -5,7 +5,7 @@ server:
   port: 44666
   debug: true
   https:
-    enable: true
+    enable: false
     port: 443
     redirect-to: https://localhost
     server-name: localhost

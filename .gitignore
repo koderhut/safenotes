@@ -2,8 +2,8 @@
 tmp/
 dist/*
 !dist/.gitkeep
-web/react/.env.production
-web/react/.env.local
-web/react/public/env.js
+webapp/react/.env.production
+webapp/react/.env.local
+webapp/react/public/env.js
 /.safenotes.*.yaml
 built/
