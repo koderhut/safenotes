@@ -24,7 +24,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/internal/config"
 )
 
 // HttpServer A representation of a simple HTTP server
@@ -36,14 +36,8 @@ type HttpServer struct {
 
 // newHttpServer boots the server and attaches the mux.Router to configured port
 func newHttpServer(cfg config.ServerParams, router *mux.Router) (Server, error) {
-	addr, err := cfg.ListeningAddr()
-
-	if err != nil {
-		return nil, err
-	}
-
 	srv := &http.Server{
-		Addr: addr,
+		Addr: cfg.ListeningAddr(),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,

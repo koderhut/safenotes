@@ -22,7 +22,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/internal/config"
 	"github.com/koderhut/safenotes/stats"
 	"github.com/koderhut/safenotes/webapp/contracts"
 )
@@ -35,7 +35,7 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 
 	router.Use(requestLogger)
 	router.Use(noteStatsLogger)
-	router.Use(corsAllowedHost(c.Web.CorsHost))
+	router.Use(corsAllowedHost(c.Api.CorsHost))
 
 	router.
 		Path("/stats").
@@ -53,7 +53,7 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 		}).
 		Host(fmt.Sprintf("localhost:%s", c.Server.Port))
 
-	apiRouter := router.PathPrefix(c.Web.PathPrefix).Subrouter()
+	apiRouter := router.PathPrefix(c.Api.PathPrefix).Subrouter()
 
 	for _, routerCfg := range roots {
 		routerCfg.RegisterRoutes(router)

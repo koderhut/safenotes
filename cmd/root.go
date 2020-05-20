@@ -23,9 +23,13 @@ import (
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
+
+	"github.com/koderhut/safenotes/internal/config"
 )
 
 var cfgFile string
+
+var cfg *config.Parameters = config.NewConfigParams()
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

@@ -23,7 +23,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/internal/config"
 )
 
 type StaticSite struct {
@@ -33,10 +33,10 @@ type StaticSite struct {
 }
 
 // NewHandler init a new instance
-func NewHandler(staticPath, index string, cfg config.StaticSite) *StaticSite {
+func NewHandler(cfg config.StaticSite) *StaticSite {
 	return &StaticSite{
-		staticPath: staticPath,
-		index:      index,
+		staticPath: cfg.Resources,
+		index:      cfg.Index,
 		config:     cfg,
 	}
 }

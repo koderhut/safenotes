@@ -3,12 +3,12 @@ package webapp
 import (
 	"github.com/gorilla/mux"
 
-	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/internal/config"
 )
 
 
 //
-func BootstrapServer(cfg config.Parameters, router *mux.Router) (Server, error) {
+func BootstrapServer(cfg *config.Parameters, router *mux.Router) (Server, error) {
 	var srv Server
 
 	if cfg.Server.Https.Enable == true {

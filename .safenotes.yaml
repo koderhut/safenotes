@@ -1,29 +1,29 @@
-app: nil
-
 server:
-  ip: 0.0.0.0
-  port: 44666
-  debug: true
+  ip:        0.0.0.0
+  port:      44666
+  verbosity: debug
   https:
-    enable: false
-    port: 443
-    redirect-to: https://localhost
-    server-name: localhost
-    cert: ./dist/cert.pem
-    key: ./dist/key.pem
-  static-site:
-    serve: true
-    index: index.html
-    resources: dist/static/
-    envjs: |
-      window.snenv={
-        "web":{
-          "domain":"http://localhost:444",
-          "storage_path":"http://localhost:322/api"
-        }
-      }
+    enable:          false
+    port:            443
+    cert:            ./dist/cert.pem
+    key:             ./dist/key.pem
+    server-name:     localhost
+    enable-redirect: true
+    redirect-to:     https://localhost
 
-web:
-  domain: localhost
-  cors-host: "http://localhost:44666"
+web-api:
+  domain:      localhost
+  cors-host:   "https://localhost"
   path-prefix: /api
+
+static-site:
+  serve:     true
+  index:     index.html
+  resources: ./dist/static
+  envjs:     |
+             window.snenv={
+               "web":{
+                 "domain":"http://localhost:44666",
+                 "storage_path":"http://localhost:44666/api"
+               }
+             }

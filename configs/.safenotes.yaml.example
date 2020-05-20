@@ -1,15 +1,29 @@
-app: nil
-
 server:
-  ip: 0.0.0.0
-  port: 80
-  debug: false
-  static-site:
-    serve: true
-    index: index.html
-    resources: /safenotes/react/
+  ip:        0.0.0.0
+  port:      80
+  verbosity: debug
+  https:
+    enable:      true
+    port:        443
+    cert:        ./config/cert.pem
+    cert-key:    ./config/key.pem
+    server-name: localhost
+    enable-redirect: true
+    redirect-to: https://localhost/
 
-web:
-  domain: localhost
-  cors-host: "http://localhost"
+web-api:
+  domain:      localhost
+  cors-host:   "https://localhost"
   path-prefix: /api
+
+static-site:
+  serve:     true
+  index:     index.html
+  resources: ./www
+  envjs:     |
+             window.snenv={
+               "web":{
+                 "domain":"https://localhost/app",
+                 "storage_path":"https://localhost/api"
+               }
+             }

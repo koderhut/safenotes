@@ -28,7 +28,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/koderhut/safenotes/config"
+	"github.com/koderhut/safenotes/internal/config"
 )
 
 // HttpsServer A representation of a HTTP server that routes all traffic to the HTTPS server
@@ -40,19 +40,10 @@ type HttpsServer struct {
 }
 
 func newHttpsServer(cfg config.ServerParams, router *mux.Router) (Server, error) {
-	httpAddr, err := cfg.ListeningAddr()
-	if err != nil {
-		return nil, err
-	}
-
-	httpsAddr, err := cfg.HTTPSListeningAddr()
-	if err != nil {
-		return nil, err
-	}
 
 	// build a HTTP server that would redirect to HTTPS and that is all
 	httpSrv := &http.Server{
-		Addr: httpAddr,
+		Addr: cfg.ListeningAddr(),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
@@ -62,7 +53,7 @@ func newHttpsServer(cfg config.ServerParams, router *mux.Router) (Server, error)
 
 	// configure the HTTPS server
 	httpsSrv := &http.Server{
-		Addr: httpsAddr,
+		Addr: cfg.HTTPSListeningAddr(),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
@@ -138,12 +129,12 @@ func (https HttpsServer) GetListeningAddr() string  {
 
 // prepareTLS config for the HTTPS server
 func prepareTlS(cfg config.Https) *tls.Config {
-	crt, err := ioutil.ReadFile(cfg.Crt)
+	crt, err := ioutil.ReadFile(cfg.Cert)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	key, err := ioutil.ReadFile(cfg.Key)
+	key, err := ioutil.ReadFile(cfg.CertKey)
 	if err != nil {
 		log.Fatal(err)
 	}

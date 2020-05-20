@@ -27,13 +27,10 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
-	"github.com/koderhut/safenotes/config"
 	"github.com/koderhut/safenotes/note"
 	"github.com/koderhut/safenotes/staticsite"
 	"github.com/koderhut/safenotes/webapp"
 )
-
-var cfg config.Parameters
 
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
@@ -49,14 +46,11 @@ expose the API endpoints for the service
 		apiRoutes := []webapp.WebRouting{note.NewWebApi()}
 		rootRoutes := []webapp.WebRouting{}
 
-		if cfg.Server.Static.Serve == true {
-			rootRoutes = append(
-				rootRoutes,
-				staticsite.NewHandler(cfg.Server.Static.Resources, cfg.Server.Static.Index, cfg.Server.Static),
-			)
+		if cfg.StaticSite.Serve == true {
+			rootRoutes = append(rootRoutes, staticsite.NewHandler(cfg.StaticSite))
 		}
 
-		router := webapp.BootstrapRouter(&cfg, apiRoutes, rootRoutes)
+		router := webapp.BootstrapRouter(cfg, apiRoutes, rootRoutes)
 		srv, err := webapp.BootstrapServer(cfg, router)
 
 		if err != nil {
@@ -84,7 +78,7 @@ expose the API endpoints for the service
 }
 
 func debugMode(router *mux.Router) {
-	if !cfg.Server.Debug {
+	if "debug" != cfg.Server.Verbosity {
 		return
 	}
 
@@ -102,7 +96,6 @@ func debugMode(router *mux.Router) {
 	})
 	table.Render()
 	log.Printf("***\n")
-
 }
 
 func init() {
