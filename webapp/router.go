@@ -71,8 +71,6 @@ func requestLogger(next http.Handler) http.Handler {
 		logs.Writer.Info(fmt.Sprintf("%s %s %s %s", req.Method, req.RemoteAddr, req.RequestURI, route.GetName()))
 
 		next.ServeHTTP(w, req)
-
-		logs.Writer.Info(fmt.Sprintf("Response: %s", w.Header()))
 	})
 }
 
