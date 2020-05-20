@@ -1,7 +1,6 @@
 server:
   ip:        0.0.0.0
   port:      44666
-  verbosity: debug
   https:
     enable:          false
     port:            443
@@ -9,11 +8,11 @@ server:
     key:             ./dist/key.pem
     server-name:     localhost
     enable-redirect: true
-    redirect-to:     https://localhost
+    redirect-to:     http://localhost:44666/
 
 web-api:
   domain:      localhost
-  cors-host:   "https://localhost"
+  cors-host:   "http://localhost:44666"
   path-prefix: /api
 
 static-site:

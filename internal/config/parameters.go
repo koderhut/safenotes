@@ -28,10 +28,10 @@ const (
 
 func NewConfigParams() *Parameters {
 	return &Parameters{
+		Verbose: false,
 		Server: ServerParams{
-			IP:        defaultIp,
-			Port:      defaultPort,
-			Verbosity: "info",
+			IP:      defaultIp,
+			Port:    defaultPort,
 			Https: Https{
 				Enable:     true,
 				Port:       defaultHttpsPort,

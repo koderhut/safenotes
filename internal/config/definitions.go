@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package config
 
 // Top level options
@@ -21,26 +20,26 @@ type Parameters struct {
 	Server     ServerParams
 	Api        ApiParams  `mapstructure:"web-api"`
 	StaticSite StaticSite `mapstructure:"static-site"`
+	Verbose    bool
 }
 
 // Parameters for configuring the server part
 // of the application, ie. port, ip, https
 type ServerParams struct {
-	IP        string
-	Port      string
-	Verbosity string
-	Https     Https
+	IP    string
+	Port  string
+	Https Https
 }
 
 // https configuration parameters
 type Https struct {
-	Enable     bool
-	Port       string
-	Cert       string
-	CertKey    string `mapstructure:"cert-key"`
-	ServerName string `mapstructure:"server-name"`
-	EnableRedirect bool `mapstructure:"enable-redirect"`
-	RedirectTo string `mapstructure:"redirect-to"`
+	Enable         bool
+	Port           string
+	Cert           string
+	CertKey        string `mapstructure:"cert-key"`
+	ServerName     string `mapstructure:"server-name"`
+	EnableRedirect bool   `mapstructure:"enable-redirect"`
+	RedirectTo     string `mapstructure:"redirect-to"`
 }
 
 // static-site module configuration

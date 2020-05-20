@@ -13,25 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package webapp
+package logs
 
-import (
-	"github.com/gorilla/mux"
+import "github.com/lajosbencz/glo"
 
-	"github.com/koderhut/safenotes/internal/config"
-)
+type VerbosityFilter struct {
+	verbose bool
+}
 
-// BootstrapServer configures the server according to options set
-func BootstrapServer(cfg *config.Parameters, router *mux.Router) (Server, error) {
-	var srv Server
+func NewVerbosityFilter(verbose bool) *VerbosityFilter{
+	return &VerbosityFilter {
+		verbose: verbose,
+	}
+}
 
-	if cfg.Server.Https.Enable == true {
-		srv, _ = newHttpsServer(cfg.Server, router)
-	} else {
-		srv, _ = newHttpServer(cfg.Server, router)
+func (f * VerbosityFilter) Check(level glo.Level, line string, params ...interface{}) bool {
+	if f.verbose == false && (level >= glo.Warning || level != glo.Info) {
+		return false
 	}
 
-	err := srv.ListenAndServe()
-
-	return srv, err
+	return true
 }
+

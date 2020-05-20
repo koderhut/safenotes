@@ -16,7 +16,8 @@ limitations under the License.
 package cmd
 
 import (
-	"log"
+	"fmt"
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ configuration passed to this application.
 `,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if !viper.IsSet("output") {
-			log.Println("Missing output file")
+			logs.Writer.Error(fmt.Sprintln("Missing output file"))
 			os.Exit(1)
 		}
 	},
@@ -42,12 +43,12 @@ configuration passed to this application.
 		out := viper.GetString("output")
 		force := viper.GetBool("force")
 
-		log.Printf("Write config to: [%s]", out)
+		logs.Writer.Info(fmt.Sprintf("Write config to: [%s]", out))
 
 		_, err := os.Stat(out)
 
 		if !os.IsNotExist(err) && !force {
-			log.Printf("File [%s] already exists! Please use -f if you want to overwrite it!", out)
+			logs.Writer.Info(fmt.Sprintf("File [%s] already exists! Please use -f if you want to overwrite it!", out))
 		}
 
 		file, err := os.Create(out)

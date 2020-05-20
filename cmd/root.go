@@ -17,19 +17,20 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	"log"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/koderhut/safenotes/internal/config"
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 )
 
-var cfgFile string
-
-var cfg *config.Parameters = config.NewConfigParams()
+var (
+	cfgFile string
+	cfg *config.Parameters = config.NewConfigParams()
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -39,19 +40,18 @@ var rootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		err := viper.Unmarshal(&cfg)
 		if err != nil {
-			log.Fatalf("unable to decode into struct, %v", err)
+			logs.Writer.Critical("unable to decode into struct, %v", err)
 		}
+		logs.AddStdIoHandler(cfg.Verbose)
 	},
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		_ = logs.Writer.Critical(err.Error())
 		os.Exit(1)
 	}
 }
@@ -61,12 +61,8 @@ func init() {
 
 	viper.SetEnvPrefix("SN")
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is .safenotes.yaml)")
-
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", ".safenotes.yaml", "Use specific config file")
+	rootCmd.PersistentFlags().BoolVarP(&cfg.Verbose, "verbose", "v", false, "Display debug messages")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -78,7 +74,7 @@ func initConfig() {
 		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(err)
+			logs.Writer.Critical(err.Error())
 			os.Exit(1)
 		}
 
@@ -92,6 +88,10 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		message := fmt.Sprintf("Using config file: %s", viper.ConfigFileUsed())
+		logs.Writer.Info(message)
+		return
 	}
+
+	logs.Writer.Alert("Unable to find a config file! Running on defaults!")
 }

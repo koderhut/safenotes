@@ -18,12 +18,12 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 
 	"github.com/spf13/cobra"
 
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"github.com/koderhut/safenotes/webapp/contracts"
 )
 
@@ -41,20 +41,20 @@ var statsCmd = &cobra.Command{
 
 		req, err := http.NewRequest(http.MethodGet, statsUrl.String(), nil)
 		if err != nil {
-			log.Fatalln(err)
+			logs.Writer.Critical(err.Error())
 		}
 
 		client := http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
-			log.Fatalln(err)
+			logs.Writer.Critical(err.Error())
 		}
 
 		var result contracts.StatsMessage
 
 		json.NewDecoder(resp.Body).Decode(&result)
 
-		log.Printf("Stats for safenotes service:\n\nCurrent Number of stored notes: %d\nTotal number of stored notes: %d\n", result.StoredNotes, result.TotalNotes)
+		logs.Writer.Info(fmt.Sprintf("Stats for safenotes service:\n\nCurrent Number of stored notes: %d\nTotal number of stored notes: %d\n", result.StoredNotes, result.TotalNotes))
 	},
 }
 

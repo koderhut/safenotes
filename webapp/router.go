@@ -18,11 +18,11 @@ package webapp
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/koderhut/safenotes/internal/config"
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"github.com/koderhut/safenotes/stats"
 	"github.com/koderhut/safenotes/webapp/contracts"
 )
@@ -50,8 +50,7 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 					TotalNotes:  noteStats.Total,
 				},
 			)
-		}).
-		Host(fmt.Sprintf("localhost:%s", c.Server.Port))
+		})
 
 	apiRouter := router.PathPrefix(c.Api.PathPrefix).Subrouter()
 
@@ -69,9 +68,11 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 func requestLogger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		route := mux.CurrentRoute(req)
-		log.Println(req.Method, req.RemoteAddr, req.RequestURI, route.GetName())
+		logs.Writer.Info(fmt.Sprintf("%s %s %s %s", req.Method, req.RemoteAddr, req.RequestURI, route.GetName()))
 
 		next.ServeHTTP(w, req)
+
+		logs.Writer.Info(fmt.Sprintf("Response: %s", w.Header()))
 	})
 }
 

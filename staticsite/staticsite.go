@@ -16,7 +16,7 @@ limitations under the License.
 package staticsite
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -24,6 +24,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/koderhut/safenotes/internal/config"
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 )
 
 type StaticSite struct {
@@ -58,7 +59,7 @@ func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// if we failed to get the absolute path respond with a 400 bad request
 		// and stop
-		log.Print(err)
+		logs.Writer.Info(fmt.Sprintf(err.Error()))
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -72,18 +73,18 @@ func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if os.IsNotExist(err) {
 		// if path does not exist pass index.html instead
 		// basically sending the front-controller for the frontend app
+		logs.Writer.Info(fmt.Sprintf("[%s] does not exist! Trying to send [%s]", path, sw.index))
 		http.ServeFile(w, r, filepath.Join(sw.staticPath, sw.index))
 		return
 	} else if err != nil {
 		// if we got an error (that wasn't that the file doesn't exist) stating the
 		// file, return a 500 internal server error and stop
-		log.Print(err)
+		logs.Writer.Info(fmt.Sprintf(err.Error()))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	http.FileServer(http.Dir(sw.staticPath)).ServeHTTP(w, r)
-
 }
 
 // envJS serve the env.js config for the React SPA

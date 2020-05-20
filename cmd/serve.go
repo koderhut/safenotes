@@ -16,8 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
 	"context"
-	"log"
+	"fmt"
+	"github.com/lajosbencz/glo"
 	"os"
 	"os/signal"
 	"strings"
@@ -27,6 +29,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"github.com/koderhut/safenotes/note"
 	"github.com/koderhut/safenotes/staticsite"
 	"github.com/koderhut/safenotes/webapp"
@@ -54,13 +57,13 @@ expose the API endpoints for the service
 		srv, err := webapp.BootstrapServer(cfg, router)
 
 		if err != nil {
-			log.Panic(err)
+			logs.Writer.Critical(err.Error())
 			os.Exit(1)
 		}
 
-		log.Printf(">>> memory-notes web service is ready to receive requests on: [%s]\n", srv.GetListeningAddr())
+		logs.Writer.Info(fmt.Sprintf(">>> memory-notes web service is ready to receive requests on: [%s]", srv.GetListeningAddr()))
 
-		debugMode(router)
+		printRegisteredRoutes(router)
 
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, os.Kill)
@@ -71,19 +74,17 @@ expose the API endpoints for the service
 		defer cancel()
 		srv.Shutdown(ctx)
 
-		log.Println(">>> memory-notes web service has shutdown")
+		logs.Writer.Info(fmt.Sprintf(">>> memory-notes web service has shutdown"))
 
 		os.Exit(0)
 	},
 }
 
-func debugMode(router *mux.Router) {
-	if "debug" != cfg.Server.Verbosity {
-		return
-	}
-
-	log.Printf("*** Registered routes ****")
-	table := tablewriter.NewWriter(os.Stdout)
+func printRegisteredRoutes(router *mux.Router) {
+	buf := bytes.Buffer{}
+	p := strings.Repeat("*", 10)
+	buf.WriteString(fmt.Sprintf("%s %s %s\n", p, "Registered routes", p))
+	table := tablewriter.NewWriter(&buf)
 	table.SetHeader([]string{"Route", "Methods", "Name"})
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
@@ -95,7 +96,7 @@ func debugMode(router *mux.Router) {
 		return nil
 	})
 	table.Render()
-	log.Printf("***\n")
+	logs.LogBuffer(glo.Debug, buf)
 }
 
 func init() {
