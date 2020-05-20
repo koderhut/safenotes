@@ -15,10 +15,6 @@
 # limitations under the License.
 #####
 
-LABEL "Maintainer"="Denis Rendler <connect@rendler.me>" \
-      "App"="SafeNotes"
-      "Version"="0.1.0"
-
 # build the front-end app
 FROM node:latest as build_fe
 
@@ -39,15 +35,24 @@ RUN make build-app \
 # build the production final image
 FROM scratch as PROD
 
-ENV DOMAIN={localhost}
+ARG VERSION="0.1.0"
 
-COPY --from=build_fe /project/build/ /safenotes/react
+LABEL "Maintainer"="Denis Rendler <connect@rendler.me>" \
+      "App"="SafeNotes" \
+      "Version"=${VERSION}
+
+COPY --from=build_fe /project/build/ /safenotes/www
 COPY --from=build_be /project/dist/safenotes /safenotes/safenotes
 COPY --from=build_be /project/.safenotes.prod.yaml /safenotes/.safenotes.yaml
 
 WORKDIR /safenotes
 
-VOLUME /safenotes
+VOLUME /safenotes/www
+
+ARG http_port=80
+ARG https_port=443
+EXPOSE ${http_port}/tcp \
+       ${https_port}/tcp
 
 ENTRYPOINT ["/safenotes/safenotes"]
 CMD ["serve"]

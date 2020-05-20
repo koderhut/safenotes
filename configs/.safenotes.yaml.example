@@ -1,9 +1,9 @@
+verbose:     false
 server:
   ip:        0.0.0.0
   port:      80
-  verbosity: debug
   https:
-    enable:      true
+    enable:      false
     port:        443
     cert:        ./config/cert.pem
     cert-key:    ./config/key.pem
@@ -13,7 +13,7 @@ server:
 
 web-api:
   domain:      localhost
-  cors-host:   "https://localhost"
+  cors-host:   "localhost"
   path-prefix: /api
 
 static-site:
@@ -23,7 +23,7 @@ static-site:
   envjs:     |
              window.snenv={
                "web":{
-                 "domain":"https://localhost/app",
-                 "storage_path":"https://localhost/api"
+                 "domain":"http://localhost/app",
+                 "storage_path":"http://localhost/api"
                }
              }

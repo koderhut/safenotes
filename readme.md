@@ -4,6 +4,13 @@ A self-hosting app that allows to quickly and securely exchange sensitive inform
 
 ## Instalation
 
+### From Docker Hub:
+Run: ``docker run --rm -p 80:80 safenotes:latest serve -v``
+
+> **Warning:** This image with default configuration should only be used for a quick test run and not production.
+> For a production mode you should take a look at the environment variables and override
+> the configuration as needed
+
 ### From Source:
 1) Clone the Github repository:
 ``git clone https://github.com/koderhut/safenotes`` 
