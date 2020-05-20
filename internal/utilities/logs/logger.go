@@ -35,24 +35,21 @@ var (
 func init() {
 	Writer = glo.NewFacility()
 
+	ho := glo.NewHandler(stdIo).PushFilter(glo.NewFilterLevelRange(glo.Info, glo.Info))
 	he := glo.NewHandler(errIo).PushFilter(glo.NewFilterLevelRange(glo.Error, glo.Emergency))
 
-	Writer.PushHandler(he)
+	Writer.PushHandler(ho).PushHandler(he)
 }
 
-func AddStdIoHandler(verbose bool) {
+// UpdateStdIoHandler resets the Stdout and Stderr loggers based on verbose flag
+func UpdateStdIoHandler(verbose bool) {
+	Writer.ClearHandlers()
 	ho := glo.NewHandler(stdIo).PushFilter(NewVerbosityFilter(verbose))
-	Writer.PushHandler(ho)
+	he := glo.NewHandler(errIo).PushFilter(glo.NewFilterLevelRange(glo.Error, glo.Emergency))
+	Writer.PushHandler(ho).PushHandler(he)
 }
 
-func GetStdWriter() io.Writer {
-	return stdIo
-}
-
-func GetErrWriter() io.Writer {
-	return stdIo
-}
-
+// LogBuffer is logging a buffered out by separating the lines using \n as delimiter
 func LogBuffer(lvl glo.Level, b bytes.Buffer) {
 	for {
 		line, err := b.ReadString('\n')

@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -42,7 +43,7 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			logs.Writer.Critical("unable to decode into struct, %v", err)
 		}
-		logs.AddStdIoHandler(cfg.Verbose)
+		logs.UpdateStdIoHandler(cfg.Verbose)
 	},
 
 }
@@ -60,6 +61,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	viper.SetEnvPrefix("SN")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "__", "-", "_"))
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", ".safenotes.yaml", "Use specific config file")
 	rootCmd.PersistentFlags().BoolVarP(&cfg.Verbose, "verbose", "v", false, "Display debug messages")
