@@ -41,6 +41,11 @@ func NewConfigParams() *Parameters {
 				EnableRedirect: true,
 				RedirectTo: "https://localhost",
 			},
+			Auth: Auth{
+				Realm: "localhost - Restricted",
+				User: "",
+				Pass: "",
+			},
 		},
 		Api: ApiParams{
 			PathPrefix: "/api",

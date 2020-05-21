@@ -37,6 +37,7 @@ var statsCmd = &cobra.Command{
 			Scheme: "http",
 			Host: fmt.Sprintf("%s:%s","localhost", cfg.Server.Port),
 			Path: "/stats",
+			User: url.UserPassword(cfg.Server.Auth.User, cfg.Server.Auth.Pass),
 		}
 
 		req, err := http.NewRequest(http.MethodGet, statsUrl.String(), nil)

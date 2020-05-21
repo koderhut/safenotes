@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
 	"github.com/koderhut/safenotes/internal/config"
 	"github.com/koderhut/safenotes/internal/utilities/logs"
@@ -40,17 +41,7 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 	router.
 		Path("/stats").
 		Methods(http.MethodGet).
-		HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-
-			json.NewEncoder(w).Encode(
-				&contracts.StatsMessage{
-					Status:      true,
-					StoredNotes: noteStats.Current,
-					TotalNotes:  noteStats.Total,
-				},
-			)
-		})
+		Handler(httpauth.BasicAuth(getAuthOptions(c.Server))(statsHandler()))
 
 	apiRouter := router.PathPrefix(c.Api.PathPrefix).Subrouter()
 
@@ -63,6 +54,19 @@ func BootstrapRouter(c *config.Parameters, apis []WebRouting, roots []WebRouting
 	}
 
 	return router
+}
+
+func getAuthOptions(c config.ServerParams) httpauth.AuthOptions {
+
+	if !c.Auth.Validate() {
+		logs.Writer.Critical("invalid or missing BasicAuth credentials")
+	}
+
+	return httpauth.AuthOptions{
+		Realm:    c.Auth.Realm,
+		User:     c.Auth.User,
+		Password: c.Auth.Pass,
+	}
 }
 
 func requestLogger(next http.Handler) http.Handler {
@@ -97,4 +101,18 @@ func corsAllowedHost(cors string) mux.MiddlewareFunc {
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+func statsHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		json.NewEncoder(w).Encode(
+			&contracts.StatsMessage{
+				Status:      true,
+				StoredNotes: noteStats.Current,
+				TotalNotes:  noteStats.Total,
+			},
+		)
+	})
 }
