@@ -29,7 +29,7 @@ FROM golang:latest as build_be
 COPY ./ /project
 WORKDIR /project
 
-RUN make build-app \
+RUN make build \
     && chmod +x /project/dist/safenotes
 
 # build the production final image
