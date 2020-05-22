@@ -1,6 +1,9 @@
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
 github.com/fsnotify/fsnotify
+# github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
+## explicit
+github.com/goji/httpauth
 # github.com/google/uuid v1.1.1
 ## explicit
 github.com/google/uuid

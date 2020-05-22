@@ -29,6 +29,22 @@ type ServerParams struct {
 	IP    string
 	Port  string
 	Https Https
+	Auth  Auth
+}
+
+// BasicAuth options
+type Auth struct {
+	Realm string
+	User  string
+	Pass  string
+}
+
+func (a Auth) Validate() bool {
+	if a.User == "" || a.Pass == "" {
+		return false
+	}
+
+	return true
 }
 
 // https configuration parameters

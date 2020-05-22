@@ -9,6 +9,10 @@ server:
     server-name:     localhost
     enable-redirect: true
     redirect-to:     http://localhost:44666/
+  auth:
+    realm: test
+    user: denis
+    pass: denis
 
 web-api:
   domain:      localhost
