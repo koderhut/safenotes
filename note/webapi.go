@@ -24,15 +24,17 @@ import (
 )
 
 // NotesWebApi controller
-type WebApi struct{}
-
-var (
-	notesStorage MemoryRepo
-)
+type WebApi struct{
+	notesStorage Repository
+}
 
 // NewWebApi initialize a new controller
-func NewWebApi() *WebApi {
-	return &WebApi{}
+func NewWebApi(repository Repository) *WebApi {
+	return &WebApi{notesStorage: repository}
+}
+
+func NewWithMemoryRepo() *WebApi {
+	return NewWebApi(NewRepo(make([]*Note, 0)))
 }
 
 // Register the Notes api endpoints
@@ -48,7 +50,7 @@ func (nc WebApi) Retrieve(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	params := mux.Vars(r)
-	note, err := notesStorage.Pop(params["note"])
+	note, err := nc.notesStorage.Pop(params["note"])
 
 	if nil != err {
 		if "note does not exist" == err.Error() {
@@ -74,7 +76,16 @@ func (nc WebApi) Store(w http.ResponseWriter, r *http.Request) {
 
 	var pl contracts.InputMessage
 	_ = json.NewDecoder(r.Body).Decode(&pl)
-	note, err := notesStorage.Store(pl.Content)
+
+	if pl.Content == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(contracts.ErrorMessage{
+			Status:  false,
+			Message: "Missing content data!",
+		})
+	}
+
+	note, err := nc.notesStorage.Store(pl.Content)
 
 	if nil != err {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -84,7 +95,6 @@ func (nc WebApi) Store(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//link := nc.urlGenerator.Generate("/notes/" + note.ID.String())
 	reply := contracts.LinkMessage{Status: true, Link: "", Id: note.ID.String()}
 
 	json.NewEncoder(w).Encode(&reply)

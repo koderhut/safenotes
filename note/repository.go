@@ -22,12 +22,18 @@ import (
 	"github.com/google/uuid"
 )
 
+type Repository interface {
+	FetchByID(id string) (*Note, error)
+	Pop(id string) (*Note, error)
+	Store(content string) (Note, error)
+}
+
 type MemoryRepo struct {
 	stored []*Note
 }
 
-func NewRepo() *MemoryRepo {
-	return &MemoryRepo{}
+func NewRepo(s []*Note) *MemoryRepo {
+	return &MemoryRepo{stored: s}
 }
 
 // FetchByID retrieves a note based on it's ID

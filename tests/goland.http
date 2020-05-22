@@ -16,6 +16,7 @@
 ### get current stats
 GET {{ domain }}/stats
 Accept: application/json
+Authorization: Basic {{username}} {{password}}
 
 > {%
 client.global.set("stored-notes",response.body['stored-notes']);
@@ -60,6 +61,7 @@ client.global.set("uid", response.body["note-id"])
 ### check stats
 GET {{ domain }}/stats
 Accept: application/json
+Authorization: Basic {{username}} {{password}}
 
 > {%
 stored = parseInt(client.global.get("stored-notes")) + 2;
@@ -94,6 +96,7 @@ client.test("note content was retrieved", function() {
 ###
 GET {{ domain }}/stats
 Accept: application/json
+Authorization: Basic {{username}} {{password}}
 
 > {%
 stored = parseInt(client.global.get("stored-notes")) - 1;

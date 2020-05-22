@@ -46,7 +46,7 @@ expose the API endpoints for the service
 
 	Run: func(cmd *cobra.Command, args []string) {
 		wait := time.Second * 15
-		apiRoutes := []webapp.WebRouting{note.NewWebApi()}
+		apiRoutes := []webapp.WebRouting{note.NewWithMemoryRepo()}
 		rootRoutes := []webapp.WebRouting{}
 
 		if cfg.StaticSite.Serve == true {
