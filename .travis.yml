@@ -1,0 +1,27 @@
+language: go
+
+go:
+  - 1.14.x
+
+services:
+  - docker
+
+os: linux
+dist: bionic
+
+stages:
+  - test
+  - docker_build
+    if: branch = master
+
+jobs:
+  fast_finish: true
+  include:
+    - stage: "test"
+      install: skip
+      name: "Unit tests"
+      script: make test
+    - stage: "docker_build"
+      install: skip
+      name: "Docker image build"
+      script: make release-docker
