@@ -15,8 +15,8 @@ build:
 
 .PHONY: release-docker
 release-docker:
-	@if [ ! -f '.safenotes.prod.yaml' ]; then echo ">>> Missing .safenotes.prod.yaml" && exit 1; fi;
-	DOCKER_BUILDKIT=1 docker build --target PROD -f build/docker/Dockerfile ${OPTS} --tag safenotes:${TAG} .
+	@if [ ! -f '.safenotes.build.yaml' ]; then echo ">>> Missing .safenotes.build.yaml" && exit 1; fi;
+	DOCKER_BUILDKIT=1 docker build --target PROD -f build/docker/Dockerfile ${OPTS} --tag ${REPO}:${TAG} .
 
 .PHONY: react-dev
 react-dev:

@@ -43,7 +43,7 @@ LABEL "Maintainer"="Denis Rendler <connect@rendler.me>" \
 
 COPY --from=build_fe /project/build/ /safenotes/www
 COPY --from=build_be /project/dist/safenotes /safenotes/safenotes
-COPY --from=build_be /project/.safenotes.prod.yaml /safenotes/.safenotes.yaml
+COPY --from=build_be /project/.safenotes.build.yaml /safenotes/.safenotes.yaml
 
 WORKDIR /safenotes
 
