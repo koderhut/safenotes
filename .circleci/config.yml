@@ -1,0 +1,114 @@
+# CircleCI build and deployment for safenotes
+#
+version: 2.1
+
+executors:
+  golang-exec:
+    docker:
+      - image: circleci/golang:1.14.2
+        user:  root
+    working_directory: /safenotes
+
+jobs:
+  tests-run:
+    executor: golang-exec
+    steps:
+      - checkout
+      - run:
+          name:    Running backend tests
+          command: make test
+
+  release-docker-image-version:
+    executor: golang-exec
+    steps:
+      - checkout
+      - run:
+          name:    Prepare .safenote.yaml
+          command: cp configs/.safenotes.yaml.example .safenotes.build.yaml
+      - run:
+          name:    Prepare .env.production
+          command: cp configs/react.env.example webapp/react/.env.production
+      - setup_remote_docker:
+          version: 19.03.8
+      - run:
+          name:    Build The Docker Image
+          command: make release-docker TAG=<< pipeline.git.tag >> REPO=$IMAGE_REPO
+      - run:
+          name:    Deploy to Docker Hub
+          command: |
+              echo $DOCKER_TOKEN | docker login --username $DOCKER_LOGIN --password-stdin
+              docker push $IMAGE_REPO:<< pipeline.git.tag >>
+      - run:
+          name:    Dump image to tar.gz
+          command: |
+              mkdir artifacts
+              docker image save -o artifacts/safenotes.docker.tar.gz $IMAGE_REPO:<< pipeline.git.tag >>
+      - persist_to_workspace:
+          root: artifacts/
+          paths:
+            - safenotes.docker.tar.gz
+
+  release-docker-image-latest:
+    executor: golang-exec
+    steps:
+      - attach_workspace:
+          at: artifacts/
+      - setup_remote_docker:
+          version: 19.03.8
+      - run:
+          name:    Deploy 'latest' tag to Docker Hub
+          command: |
+              echo "Loading image to daemon..."
+              docker image load -i artifacts/safenotes.docker.tar.gz
+              echo "Tagging image..."
+              docker image tag $IMAGE_REPO:<< pipeline.git.tag >> $IMAGE_REPO:latest
+              echo "Pushing image to Docker Hub..."
+              echo $DOCKER_TOKEN | docker login --username $DOCKER_LOGIN --password-stdin
+              docker push $IMAGE_REPO:latest
+
+workflows:
+  version: 2
+  run-tests:
+    jobs:
+      - tests-run:
+          filters:
+            branches:
+              only:
+                - master
+
+  docker-release:
+    jobs:
+      - tests-run:
+          filters:
+            tags:
+              only: /^[0-9\.]*/
+            branches:
+              ignore: /.*/
+      - release-docker-image-version:
+          context: docker_hub
+          filters:
+            tags:
+              only: /^[0-9\.]*/
+            branches:
+              ignore: /.*/
+          requires:
+            - tests-run
+
+      - hold:
+          type: approval
+          filters:
+            tags:
+              only: /^[0-9\.]*/
+            branches:
+              ignore: /.*/
+
+      - release-docker-image-latest:
+          context: docker_hub
+          filters:
+            tags:
+                only: /^[0-9\.]*/
+            branches:
+              ignore: /.*/
+          requires:
+            - release-docker-image-version
+            - hold
