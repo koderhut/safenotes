@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package note_test
 
 import (
@@ -27,7 +26,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	. "github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 
 	. "github.com/koderhut/safenotes/note"
 )
@@ -37,8 +36,8 @@ const ZeroUuid = "00000000-0000-0000-0000-000000000000"
 func TestWebApi_RegisterRoutes(t *testing.T) {
 	var (
 		zeroUuid, _ = uuid.Parse(ZeroUuid)
-		testRouter  = NewRouter()
-		api         = NewWebApi(NewRepo([]*Note{&Note{
+		testRouter  = mux.NewRouter()
+		api         = NewWebApi(NewMemoryRepo([]*Note{&Note{
 			ID:      zeroUuid,
 			Content: "test_content",
 			Date:    time.Time{},
@@ -61,7 +60,7 @@ func TestWebApi_RegisterRoutes(t *testing.T) {
 
 	api.RegisterRoutes(testRouter)
 
-	testRouter.Walk(func(route *Route, router *Router, ancestors []*Route) error {
+	testRouter.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		routeTpl, _ := route.GetPathTemplate()
 		methods, _ := route.GetMethods()
 		routeMethods := strings.Join(methods, ", ")
@@ -88,13 +87,13 @@ func TestWebApi_Retrieve(t *testing.T) {
 	}
 	var (
 		zeroUuid, _ = uuid.Parse(ZeroUuid)
-		notesApi    = NewWebApi(NewRepo([]*Note{&Note{
+		notesApi    = NewWebApi(NewMemoryRepo([]*Note{&Note{
 			ID:      zeroUuid,
 			Content: "test_content",
 			Date:    time.Time{},
 		}}))
 		r     = httptest.NewRequest("GET", "http://localhost/api/notes/"+ZeroUuid, nil)
-		req   = SetURLVars(r, map[string]string{"note": ZeroUuid})
+		req   = mux.SetURLVars(r, map[string]string{"note": ZeroUuid})
 		tests = []struct {
 			name   string
 			args   args
@@ -144,7 +143,7 @@ func TestWebApi_Store(t *testing.T) {
 		c string
 	}
 	var (
-		notesApi = NewWebApi(NewRepo(make([]*Note, 0)))
+		notesApi = NewWebApi(NewMemoryRepo(make([]*Note, 0)))
 		tests    = []struct {
 			name   string
 			args   args
@@ -153,18 +152,25 @@ func TestWebApi_Store(t *testing.T) {
 			err    string
 		}{
 			{
-				"retrieve a note",
+				"store a note",
 				args{*httptest.NewRecorder(), "{\"content\":\"test_content\"}"},
 				200,
 				false,
 				"",
 			},
 			{
-				"retrieve a non-existent note",
+				"store a 30 minutes self-destructing note",
+				args{*httptest.NewRecorder(), "{\"content\":\"test_content\", \"auto-expire\":\"30m\"}"},
+				200,
+				false,
+				"",
+			},
+			{
+				"try to store a note without content",
 				args{*httptest.NewRecorder(), ""},
 				400,
 				true,
-				"Missing content data!",
+				"Missing or invalid input data!",
 			},
 		}
 	)
@@ -179,14 +185,8 @@ func TestWebApi_Store(t *testing.T) {
 				t.Errorf("Expected status code [%v]; got [%v]", tt.status, res.StatusCode)
 			}
 
-			//_, err := ioutil.ReadAll(res.Body)
-			defer res.Body.Close()
-			//if err != nil {
-			//	t.Fatalf("Could not read body: [%v]", err)
-			//}
-
 			if tt.isErr == false {
-				var jsonCnt contracts.LinkMessage
+				var jsonCnt LinkMessage
 				json.NewDecoder(res.Body).Decode(&jsonCnt)
 				_, err := uuid.Parse(jsonCnt.Id)
 				if err != nil {
@@ -197,6 +197,55 @@ func TestWebApi_Store(t *testing.T) {
 				json.NewDecoder(res.Body).Decode(&jsonCnt)
 				if jsonCnt.Message != tt.err {
 					t.Errorf("Expected error [%v]; got [%v]", tt.err, jsonCnt.Message)
+				}
+			}
+		})
+	}
+}
+
+func TestValidate_InputMessage(t *testing.T) {
+	tt := []struct {
+		name          string
+		args          InputMessage
+		expected      bool
+		validationErr []string
+	}{
+		{
+			"provide proper values",
+			InputMessage{
+				Content:    "this is content",
+				AutoExpire: "30m",
+			},
+			true,
+			make([]string, 0),
+		},
+		{
+			"provide invalid values for all fields",
+			InputMessage{
+				Content:    "",
+				AutoExpire: "abcd",
+			},
+			false,
+			[]string{
+				"invalid input for: [InputMessage.Content/required] with value: []",
+				"invalid input for: [InputMessage.AutoExpire/expire-interval] with value: [abcd]",
+			},
+		},
+	}
+
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			res, failed := tc.args.IsValid()
+
+			if res != tc.expected {
+				t.Errorf("Expected [%v] validating [%v]; got [%v]", tc.expected, tc.args, res)
+			}
+
+			if len(failed) != 0 {
+				for i, v := range failed {
+					if v != tc.validationErr[i] {
+						t.Errorf("Expected error [%v]; got [%v]", tc.validationErr[i], v)
+					}
 				}
 			}
 		})
