@@ -1,5 +1,7 @@
 # SafeNotes
 
+[![SafeNotes](https://circleci.com/gh/koderhut/safenotes.svg?style=shield)](https://circleci.com/gh/koderhut/safenotes)
+
 A self-hosting app that allows to quickly and securely exchange sensitive information like credentials.
 
 ## Instalation
