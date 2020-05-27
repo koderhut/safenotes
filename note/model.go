@@ -30,6 +30,7 @@ type Note struct {
 
 const (
 	EXPIRE_ON_READ    = "on-read"
+	EXPIRE_AFTER_5M   = "5m"
 	EXPIRE_AFTER_30M  = "30m"
 	EXPIRE_AFTER_1H   = "1h"
 	EXPIRE_AFTER_1DAY = "24h"

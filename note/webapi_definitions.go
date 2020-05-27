@@ -29,7 +29,7 @@ type InputMessage struct {
 // InputMessage.IsValid is used to validate data passed from the client
 func (in *InputMessage) IsValid() (bool, []string) {
 	v := validator.New()
-	v.RegisterAlias("expire-interval", "oneof=on-read 30m 1h 24h 48h 168h")
+	v.RegisterAlias("expire-interval", "oneof=on-read 5m 30m 1h 24h 48h 168h")
 	err := v.Struct(in)
 
 	if err == nil {
@@ -46,7 +46,8 @@ func (in *InputMessage) IsValid() (bool, []string) {
 
 func (in *InputMessage) IsAutoExpire() bool {
 	switch in.AutoExpire {
-	case EXPIRE_AFTER_30M,
+	case EXPIRE_AFTER_5M,
+		EXPIRE_AFTER_30M,
 		EXPIRE_AFTER_1H,
 		EXPIRE_AFTER_1DAY,
 		EXPIRE_AFTER_2DAY,

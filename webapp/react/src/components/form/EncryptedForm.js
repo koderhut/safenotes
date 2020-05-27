@@ -4,7 +4,6 @@ import React, {useContext, useState} from "react";
 import {ConfigContext} from "../context/Config";
 import ContentInput from "./ContentInput";
 import Passphrase from "./Passphrase";
-//eslint-disable-next-line
 import ExpireTimeframe from "./ExpireTimeframe";
 import Panel from "../Panel";
 import SendSuccess from "../../modals/Note/SendSuccess";
@@ -13,6 +12,7 @@ const EncryptedForm = () => {
     const notesForm = {
         content:    "",
         passphrase: "",
+        autoExpire: "on-read",
     };
 
     const [noteId, setNoteId]                  = useState("");
@@ -20,6 +20,7 @@ const EncryptedForm = () => {
     const {web: webCfg, storage}               = useContext(ConfigContext);
 
     const updateForm = (data) => {
+        console.log(data.name, data.value, data);
         updateEncryptedForm({
             ...encryptedForm,
             [data.name]: data.value,
@@ -39,6 +40,7 @@ const EncryptedForm = () => {
 
         storage.store({
             "content": CryptoJS.AES.encrypt(encryptedForm.content, encryptedForm.passphrase).toString(),
+            "auto-expire": encryptedForm.autoExpire,
         }).then(function (response) {
             setNoteId(response.data["note-id"]);
         }).catch(function (err) {
@@ -66,7 +68,7 @@ const EncryptedForm = () => {
                     <Panel title={"Privacy"} stylesClass={"my-6"}>
                         <Passphrase name="passphrase" form={encryptedForm} onChange={updateForm}/>
 
-                        {/*<ExpireTimeframe options={appCfg.app.timeframe} />*/}
+                        <ExpireTimeframe options={webCfg.expirationOptions} selected={encryptedForm.autoExpire} onChange={updateForm}/>
                     </Panel>
                 </div>
 

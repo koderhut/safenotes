@@ -17,9 +17,12 @@ package note
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 )
 
 type Repository interface {
@@ -86,6 +89,7 @@ func (s *MemoryRepo) StoreWithTimeout(content string, until string) (*Note, erro
 	s.autoExpire[note.ID.String()] = time.AfterFunc(duration, func() {
 		_, _ = s.Pop(note.ID.String())
 		delete(s.autoExpire, note.ID.String())
+		logs.Writer.Debug(fmt.Sprintf("Note with ID [%s] has expired and has been removed!", note.ID.String()))
 	})
 
 	return note, nil
