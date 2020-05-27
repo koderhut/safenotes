@@ -25,9 +25,17 @@ static-site:
   index:     index.html
   resources: ./www
   envjs:     |
-             window.snenv={
-               "web":{
-                 "domain":"http://localhost/app",
-                 "storage_path":"http://localhost/api"
-               }
-             }
+     window.snenv={
+       "web":{
+         "domain":"http://localhost/app",
+         "storage_path":"http://localhost/api",
+         "expirationOptions": [
+             {"value": "on-read", "label": "On Read"},
+             {"value": "30m", "label": "30 minutes"},
+             {"value": "1h", "label": "1 hour"},
+             {"value": "24h", "label": "1 day"},
+             {"value": "48h", "label": "2 days"},
+             {"value": "168h", "label": "7 days"},
+         ]
+       }
+     }
