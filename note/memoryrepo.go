@@ -37,8 +37,8 @@ type MemoryRepo struct {
 	autoExpire map[string]*time.Timer
 }
 
-func NewMemoryRepo(s []*Note) *MemoryRepo {
-	return &MemoryRepo{stored: s, autoExpire: make(map[string]*time.Timer)}
+func NewMemoryRepo() *MemoryRepo {
+	return &MemoryRepo{stored: make([]*Note, 0), autoExpire: make(map[string]*time.Timer)}
 }
 
 var ErrNotFound = errors.New("note not found")

@@ -17,32 +17,24 @@ package note_test
 
 import (
 	"encoding/json"
-	"github.com/koderhut/safenotes/webapp/contracts"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 
 	. "github.com/koderhut/safenotes/note"
+	"github.com/koderhut/safenotes/webapp/contracts"
 )
-
-const ZeroUuid = "00000000-0000-0000-0000-000000000000"
 
 func TestWebApi_RegisterRoutes(t *testing.T) {
 	var (
-		zeroUuid, _ = uuid.Parse(ZeroUuid)
-		testRouter  = mux.NewRouter()
-		api         = NewWebApi(NewMemoryRepo([]*Note{&Note{
-			ID:      zeroUuid,
-			Content: "test_content",
-			Date:    time.Time{},
-		}}))
-		routes = map[string]map[string]string{
+		testRouter = mux.NewRouter()
+		api        = NewWithMemoryRepo()
+		routes     = map[string]map[string]string{
 			"/notes_": {
 				"methods": "",
 				"name":    "",
@@ -85,35 +77,32 @@ func TestWebApi_Retrieve(t *testing.T) {
 		w httptest.ResponseRecorder
 		r *http.Request
 	}
-	var (
-		zeroUuid, _ = uuid.Parse(ZeroUuid)
-		notesApi    = NewWebApi(NewMemoryRepo([]*Note{&Note{
-			ID:      zeroUuid,
-			Content: "test_content",
-			Date:    time.Time{},
-		}}))
-		r     = httptest.NewRequest("GET", "http://localhost/api/notes/"+ZeroUuid, nil)
-		req   = mux.SetURLVars(r, map[string]string{"note": ZeroUuid})
-		tests = []struct {
-			name   string
-			args   args
-			want   string
-			status int
-		}{
-			{
-				"retrieve a note",
-				args{*httptest.NewRecorder(), req},
-				"{\"complete\":true,\"content\":\"test_content\"}\n",
-				200,
-			},
-			{
-				"retrieve a non-existent note",
-				args{*httptest.NewRecorder(), req},
-				"{\"status\":false,\"message\":\"An error occurred retrieving your note!\"}\n",
-				404,
-			},
-		}
-	)
+
+	repo := NewMemoryRepo()
+	n, _ := repo.Store("test_content")
+
+	notesApi := NewWebApi(repo)
+	r := httptest.NewRequest("GET", "http://localhost/api/notes/", nil)
+	req := mux.SetURLVars(r, map[string]string{"note": n.ID.String()})
+	tests := []struct {
+		name   string
+		args   args
+		want   string
+		status int
+	}{
+		{
+			"retrieve a note",
+			args{*httptest.NewRecorder(), req},
+			"{\"complete\":true,\"content\":\"test_content\"}\n",
+			200,
+		},
+		{
+			"retrieve a non-existent note",
+			args{*httptest.NewRecorder(), req},
+			"{\"status\":false,\"message\":\"An error occurred retrieving your note!\"}\n",
+			404,
+		},
+	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -143,7 +132,7 @@ func TestWebApi_Store(t *testing.T) {
 		c string
 	}
 	var (
-		notesApi = NewWebApi(NewMemoryRepo(make([]*Note, 0)))
+		notesApi = NewWithMemoryRepo()
 		tests    = []struct {
 			name   string
 			args   args

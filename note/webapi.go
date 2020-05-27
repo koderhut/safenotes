@@ -37,7 +37,7 @@ func NewWebApi(repository Repository) *WebApi {
 }
 
 func NewWithMemoryRepo() *WebApi {
-	return NewWebApi(NewMemoryRepo(make([]*Note, 0)))
+	return NewWebApi(NewMemoryRepo())
 }
 
 // Register the Notes api endpoints

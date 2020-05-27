@@ -20,71 +20,40 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
-
 	. "github.com/koderhut/safenotes/note"
 )
 
-func TestNote_NewRepo(t *testing.T) {
-	var (
-		testUuid uuid.UUID = uuid.New()
-		testNote           = &Note{
-			ID:      testUuid,
-			Content: "test_content",
-			Date:    time.Time{},
-		}
-	)
-	tests := []struct {
-		name string
-		args []*Note
-		want *MemoryRepo
-	}{
-		{"with empty slice", make([]*Note, 0), &MemoryRepo{}},
-		{"with 1 element slice", []*Note{testNote}, &MemoryRepo{}},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := NewMemoryRepo(tt.args)
-			if got == tt.want {
-				t.Errorf("NewMemoryRepo() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestMemoryRepo_FetchByID(t *testing.T) {
 	var (
-		testUuid uuid.UUID = uuid.New()
-
-		testNote = &Note{
-			ID:      testUuid,
-			Content: "test_content",
-			Date:    time.Time{},
-		}
-
 		tests = []struct {
 			name    string
-			fields  []*Note
-			id      string
-			want    *Note
+			content string
+			testId  string
+			want    string
 			wantErr string
 		}{
-			{"fetching from repo", []*Note{testNote}, testUuid.String(), testNote, ""},
-			{"fetching missing entry", []*Note{testNote}, "test", &Note{}, "note not found"},
+			{"fetching from repo", "test_content", "", "test_content", ""},
+			{"fetching missing entry", "test_content", "test_id", "", "note not found"},
 		}
 	)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMemoryRepo(tt.fields)
+			s := NewMemoryRepo()
+			n, _ := s.Store(tt.content) // try storing a test note
 
-			got, err := s.FetchByID(tt.id)
+			id := tt.testId
+			if id == "" {
+				id = n.ID.String()
+			}
+
+			got, err := s.FetchByID(id)
 
 			if (err != nil) && err.Error() != tt.wantErr {
 				t.Errorf("Expected error = [%v], got [%v]", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
+			if err == nil && (got.Content != tt.want) {
 				t.Errorf("Expected [%v]; got [%v]", tt.want, got)
 			}
 		})
@@ -93,38 +62,36 @@ func TestMemoryRepo_FetchByID(t *testing.T) {
 
 func TestMemoryRepo_Pop(t *testing.T) {
 	var (
-		testUuid uuid.UUID = uuid.New()
-
-		testNote = &Note{
-			ID:      testUuid,
-			Content: "test_content",
-			Date:    time.Time{},
-		}
-
 		tests = []struct {
 			name    string
-			fields  []*Note
-			id      string
-			want    *Note
+			content string
+			testId  string
+			want    string
 			wantErr string
 		}{
-			{"fetching from repo", []*Note{testNote}, testUuid.String(), testNote, ""},
-			{"fetching missing entry", []*Note{testNote}, "test", &Note{}, "note not found"},
+			{"fetching from repo", "test_content", "", "test_content", ""},
+			{"fetching missing entry", "test_content", "test_id", "", "note not found"},
 		}
 	)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMemoryRepo(tt.fields)
+			s := NewMemoryRepo()
+			n, _ := s.Store(tt.content) // try storing a test note
 
-			got, err := s.Pop(tt.id)
+			id := tt.testId
+			if id == "" {
+				id = n.ID.String()
+			}
+
+			got, err := s.Pop(id)
 
 			if (err != nil) && err.Error() != tt.wantErr {
-				t.Errorf("Pop() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Expected error = [%v], got [%v]", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Pop() got = %v, want %v", got, tt.want)
+			if err == nil && (got.Content != tt.want) {
+				t.Errorf("Expected [%v]; got [%v]", tt.want, got)
 			}
 		})
 	}
@@ -141,7 +108,7 @@ func TestMemoryRepo_Store(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMemoryRepo(make([]*Note, 0))
+			s := NewMemoryRepo()
 
 			got, err := s.Store(tt.content)
 
@@ -177,7 +144,7 @@ func TestMemoryRepo_StoreWithTimeout(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMemoryRepo(make([]*Note, 0))
+			s := NewMemoryRepo()
 
 			got, err := s.StoreWithTimeout(tt.content, tt.expire)
 
@@ -194,7 +161,7 @@ func TestMemoryRepo_StoreWithTimeout(t *testing.T) {
 
 	for _, tt := range errTests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMemoryRepo(make([]*Note, 0))
+			s := NewMemoryRepo()
 
 			_, err := s.StoreWithTimeout(tt.content, tt.expire)
 
@@ -217,10 +184,10 @@ func TestMemoryRepo_AutoExpireNote(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			s := NewMemoryRepo(make([]*Note, 0))
+			s := NewMemoryRepo()
 
 			n, err := s.StoreWithTimeout(tc.note, tc.expiration)
-			if err != nil{
+			if err != nil {
 				t.Errorf("Unexpected error fetching note; got [%v]", err)
 			}
 
@@ -258,10 +225,10 @@ func TestMemoryRepo_CancellingAutoExpireNote(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			s := NewMemoryRepo(make([]*Note, 0))
+			s := NewMemoryRepo()
 
 			n, err := s.StoreWithTimeout(tc.note, tc.expiration)
-			if err != nil{
+			if err != nil {
 				t.Errorf("Unexpected error fetching note; got [%v]", err)
 			}
 
