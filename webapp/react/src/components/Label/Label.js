@@ -1,7 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Label = ({classNames, text, labelFor}) => {
+const Label = ({classNames, text, labelFor, children}) => {
+    if (children !== undefined) {
+        text = children;
+    }
+
     return (
         <label htmlFor={labelFor} className={classNames.join(' ')}>{text}</label>
     );

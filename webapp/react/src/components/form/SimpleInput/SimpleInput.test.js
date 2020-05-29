@@ -75,9 +75,10 @@ describe('it renders an input text box', () => {
     const { getByRole } = render(<SimpleInput name={'test-input'} type={'text'} changeEv={handleChange} />);
     const input = getByRole("textbox");
 
-    fireEvent.change(input, { target: { value: 'a' } })
+    fireEvent.change(input, { target: { value: 'abcd' } })
     expect(handleChange).toHaveBeenCalledTimes(1)
-    expect(input.value).toBe('a')
+    expect(handleChange).toHaveBeenCalledWith(input)
+    expect(input.value).toBe('abcd')
   });
 
   test('render text input with specific onBlur handler', function () {
@@ -97,8 +98,7 @@ describe('it renders an input text box', () => {
 
     fireEvent.focus(input, { target: input })
     expect(handleFocus).toHaveBeenCalledTimes(1)
+    expect(handleFocus).toHaveBeenCalledWith(input)
   });
 
 });
-
-
