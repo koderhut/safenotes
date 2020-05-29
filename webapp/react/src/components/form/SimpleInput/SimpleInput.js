@@ -1,6 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Label from '../../label/Label'
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Label from '../../Label/Label';
 
 const SimpleInput = ({
   label,
@@ -24,11 +25,11 @@ const SimpleInput = ({
   step,
 }) => {
 
-  const inputClsNames = inputCls.join(" ")
+  const inputClsNames = inputCls.join(' ');
 
   return (
     <>
-      {(label !== '') ? <Label classNames={labelCls} text={label} labelFor={id} /> : ''}
+      {(label !== '') ? <Label classNames={labelCls} text={label} labelFor={id}/> : ''}
       <input id={id}
              name={name}
              type={type}
@@ -49,8 +50,8 @@ const SimpleInput = ({
              step={step}
       />
     </>
-  )
-}
+  );
+};
 
 SimpleInput.propTypes = {
   label:        PropTypes.string,
@@ -74,7 +75,7 @@ SimpleInput.propTypes = {
   step:         PropTypes.number,
   color:        PropTypes.oneOf(
     ['primary', 'info', 'success', 'warning', 'danger']),
-}
+};
 
 SimpleInput.defaultProps = {
   label:        '',
@@ -100,6 +101,6 @@ SimpleInput.defaultProps = {
   pattern:      '',
   step:         0,
   color:        'primary',
-}
+};
 
-export default SimpleInput
+export default SimpleInput;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import SimpleInput from './SimpleInput';
 
@@ -68,6 +68,35 @@ describe('it renders an input text box', () => {
     const input = getByRole("textbox");
 
     expect(input.value).toEqual('test value');
+  });
+
+  test('render text input with specific onChange handler', function () {
+    const handleChange = jest.fn()
+    const { getByRole } = render(<SimpleInput name={'test-input'} type={'text'} changeEv={handleChange} />);
+    const input = getByRole("textbox");
+
+    fireEvent.change(input, { target: { value: 'a' } })
+    expect(handleChange).toHaveBeenCalledTimes(1)
+    expect(input.value).toBe('a')
+  });
+
+  test('render text input with specific onBlur handler', function () {
+    const handleBlur = jest.fn()
+    const { getByRole } = render(<SimpleInput name={'test-input'} type={'text'} blurEv={handleBlur} />);
+    const input = getByRole("textbox");
+
+    fireEvent.blur(input, { target: input })
+    expect(handleBlur).toHaveBeenCalledTimes(1)
+    expect(handleBlur).toHaveBeenCalledWith(input)
+  });
+
+  test('render text input with specific onFocus handler', function () {
+    const handleFocus = jest.fn()
+    const { getByRole } = render(<SimpleInput name={'test-input'} type={'text'} focusEv={handleFocus} />);
+    const input = getByRole("textbox");
+
+    fireEvent.focus(input, { target: input })
+    expect(handleFocus).toHaveBeenCalledTimes(1)
   });
 
 });
