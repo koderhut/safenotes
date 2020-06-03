@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Select = ({ name, selectCls, childCls, baseValue, updateEv, options }) => {
 
   options = options.map((opt, index) => {
-    return <option key={index} value={opt.value} className={childCls.join(' ')}>{opt.label}</option>;
+    return <option key={index} value={opt.value} className={childCls.join(' ')}>{opt.text}</option>;
   });
 
   return (
