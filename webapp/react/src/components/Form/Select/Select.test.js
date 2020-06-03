@@ -41,7 +41,7 @@ describe('it renders select box', () => {
     const { getByRole } = render(
       <Select
         name={'test_box'}
-        baseValue={'test_item_2'}
+        initValue={'test_item_2'}
         options={[{ text: 'test item 1', value: 'test_item_1' }, { text: 'test item 2', value: 'test_item_2' }]}
       />,
     );

@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Select = ({ name, selectCls, childCls, baseValue, updateEv, options }) => {
+const Select = ({ name, selectCls, childCls, initValue, updateEv, options }) => {
 
   options = options.map((opt, index) => {
-    return <option key={index} value={opt.value} className={childCls.join(' ')}>{opt.text}</option>;
+    const isSelected = opt.value === initValue ? {'selected': true} : {};
+    return <option key={index} value={opt.value} className={childCls.join(' ')} {...isSelected}>{opt.text}</option>;
   });
 
   return (
     <select
       name={name}
       className={selectCls.join(' ')}
-      defaultValue={baseValue}
+      defaultValue={initValue}
       onChange={(e) => updateEv(e.target)}
     >
       {options}
@@ -23,7 +24,7 @@ Select.propTypes = {
   name:         PropTypes.string.isRequired,
   selectCls:    PropTypes.array,
   childCls:     PropTypes.array,
-  baseValue: PropTypes.string,
+  initValue: PropTypes.string,
   updateEv:     PropTypes.func,
   options:      PropTypes.arrayOf(
     PropTypes.shape({
@@ -37,7 +38,7 @@ Select.propTypes = {
 Select.defaultProps = {
   selectCls: [],
   childCls: [],
-  baseValue: '',
+  initValue: '',
   updateEv: () => {},
   options: [],
 };
