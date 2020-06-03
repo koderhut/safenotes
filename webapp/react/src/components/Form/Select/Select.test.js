@@ -30,7 +30,9 @@ describe('it renders select box', () => {
           <option
             class=""
             value="test_item_1"
-          />,
+          >
+            test item 1
+          </option>,
         ]
     `);
   });
@@ -53,12 +55,16 @@ describe('it renders select box', () => {
           <option
             class=""
             value="test_item_1"
-          />,
+          >
+            test item 1
+          </option>,
           <option
             class=""
             selected=""
             value="test_item_2"
-          />,
+          >
+            test item 2
+          </option>,
         ]
     `);
   });
