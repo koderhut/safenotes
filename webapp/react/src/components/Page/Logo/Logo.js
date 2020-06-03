@@ -1,11 +1,15 @@
 import React from 'react';
 import PropType from 'prop-types';
 
-const Logo = ({ firstLine, secondLine, wrapClasses, slClasses, image, imageWidth, imageHeight }) => {
+const Logo = ({ firstLine, secondLine, wrapClasses, slClasses, image, imageWidth, imageHeight, imageCss, children }) => {
+
+  if (children != null) {
+    firstLine = children;
+  }
 
   const textOrImage = () => {
     if (image !== '') {
-      return <img src={image} width={imageWidth} height={imageHeight} className={wrapClasses.join(' ')}/>;
+      return <img alt="Logo" src={image} width={imageWidth} height={imageHeight} className={imageCss.join(' ')}/>;
     } else {
       return <>
         {firstLine}
@@ -27,8 +31,9 @@ Logo.propTypes = {
   wrapClasses: PropType.array,
   slClasses:   PropType.array,
   image:       PropType.string,
-  imageWidth:  PropType.number,
-  imageHeight: PropType.number,
+  imageWidth:  PropType.string,
+  imageHeight: PropType.string,
+  iamgeCss:    PropType.array,
 };
 
 Logo.defaultProps = {
@@ -36,8 +41,9 @@ Logo.defaultProps = {
   wrapClasses: [],
   slClasses:   [],
   image:       '',
-  imageWidth:  0,
-  imageHeight: 0,
+  imageWidth:  '0px',
+  imageHeight: '0px',
+  imageCss:    [],
 };
 
 export default Logo;
