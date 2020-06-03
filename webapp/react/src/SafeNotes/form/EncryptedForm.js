@@ -2,10 +2,11 @@ import CryptoJS from "crypto-js";
 import React, {useContext, useState} from "react";
 
 import {ConfigContext} from "../context/Config";
+import Panel from '../Panel/Panel';
 import ContentInput from "./ContentInput";
 import Passphrase from "./Passphrase";
 import ExpireTimeframe from "./ExpireTimeframe";
-import Panel from "../Panel";
+
 import SendSuccess from "../../modals/Note/SendSuccess";
 
 const EncryptedForm = () => {
@@ -53,10 +54,10 @@ const EncryptedForm = () => {
     };
 
     return (
-        <div className="flex flex-col items-center w-full bg-white mt-5">
-            <form className="flex flex-col w-full" onSubmit={submitForm} action="#">
+        <div className="w-full bg-white mt-5">
+            <form className="w-full" onSubmit={submitForm} action="#">
                 <div className="flex flex-col">
-                    <Panel title={"Add Your Sensitive Content"}>
+                    <Panel title={"Add Your Sensitive Content"} closable={true} wrapCss={['my-2']} titleBarCss={['text-base text-blue-400 font-bold pl-2 border border-gray-200 shadow-sm rounded-sm relative p-2']}>
                         <ContentInput
                             name="content"
                             content={encryptedForm.content}
@@ -65,7 +66,7 @@ const EncryptedForm = () => {
                         />
                     </Panel>
 
-                    <Panel title={"Privacy"} stylesClass={"my-6"}>
+                    <Panel title={"Privacy"} stylesClass={"my-6"} wrapCss={['my-2']} titleBarCss={['text-base text-blue-400 font-bold pl-2 border border-gray-200 shadow-sm rounded-sm relative p-2']}>
                         <Passphrase name="passphrase" form={encryptedForm} onChange={updateForm}/>
 
                         <ExpireTimeframe options={webCfg.expirationOptions} selected={encryptedForm.autoExpire} onChange={updateForm}/>
