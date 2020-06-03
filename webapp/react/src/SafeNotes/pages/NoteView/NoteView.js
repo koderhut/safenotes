@@ -5,10 +5,12 @@ import {ConfigContext} from "../components/context/Config";
 import DecryptionForm from "../components/form/DecryptionForm";
 import Loader from "../components/shared/Loader";
 import PinnedMessage from "../components/shared/PinnedMessage";
-import Whiteboard from "../components/shared/Whiteboard";
+import Whiteboard from '../components/Whiteboard/Whiteboard';
+
 import FetchFailed from "../modals/Note/FetchFailed";
 import ContentInput from "../components/form/ContentInput";
-import Quote from "../components/ui/Quote";
+import Quote from '../SafeNotes/ui/Quote/Quote';
+
 
 const ViewNote = () => {
     const {noteId}                         = useParams();
@@ -42,7 +44,7 @@ const ViewNote = () => {
     const updateDisplay = () => {
         if (unlockedNote !== "") {
             return (
-                <Whiteboard>
+                <Whiteboard wrapCss={['bg-white w-full xmd:w-5/6 xlg:w-4/6 mx-auto flex flex-col text-gray-700 min-h-10']}>
                     <ContentInput content={unlockedNote} readonly={true} />
                 </Whiteboard>
             );
