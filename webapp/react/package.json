@@ -28,7 +28,7 @@
     "serve-dev": "env-cmd -f .env.dev craco start",
     "build-app": "env-cmd -f .env.local craco build",
     "build-prod": "env-cmd -f .env.production craco build",
-    "test": "env-cmd -f .env.test craco test",
+    "test": "env-cmd -f .env.test craco test --maxWorkers=1",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
