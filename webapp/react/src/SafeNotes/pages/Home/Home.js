@@ -63,7 +63,7 @@ const Home = () => {
 
             <div className="bottom flex bg-gray-100 justify-end px-3 rounded">
               <input type="submit" value="Send"
-                     className="my-2 p-2 bg-gray-200 hover:bg-blue-700 hover:text-white hover:border-gray-400 text-gray-600 border-gray-500 rounded border-2 font-bold w-8/12 lg:w-4/12"
+                     className="my-2 p-2 bg-blue-400 hover:bg-blue-500 text-white rounded font-bold w-2/5 md:w-1/4 right-0"
               />
             </div>
           </form>
