@@ -26,7 +26,16 @@ const Logo = ({ firstLine, secondLine, wrapClasses, slClasses, image, imageWidth
 };
 
 Logo.propTypes = {
-  firstLine:   PropType.node.isRequired,
+  firstLine:   (props, propName, comp) => {
+    if (props.hasOwnProperty('children') && props.children !== undefined){
+      return;
+    }
+    if (props.firstLine.length !== 0) {
+      return;
+    }
+
+    return new Error(`Property "${comp}.${propName}" is required if no children elements are supplied!`);
+  },
   secondLine:  PropType.node,
   wrapClasses: PropType.array,
   slClasses:   PropType.array,
@@ -37,6 +46,7 @@ Logo.propTypes = {
 };
 
 Logo.defaultProps = {
+  firstLine: '',
   secondLine:  null,
   wrapClasses: [],
   slClasses:   [],
