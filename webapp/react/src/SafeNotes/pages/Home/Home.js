@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useContext } from 'react';
 import CryptoJS from 'crypto-js';
+import React, { useContext, useState } from 'react';
 
 import Block from '../../../components/Page/Block/Block';
 import useFormControl from '../../../components/UseFormControl/UseFormControl';
@@ -25,10 +25,15 @@ import PinnedMessage from '../../shared/PinnedMessage/PinnedMessage';
 import Quote from '../../shared/Quote/Quote';
 import ContentPanel from './content-panel/ContentPanel';
 import PrivacyPanel from './privacy-panel/PrivacyPanel';
+import SendFailure from './send-failure/SendFailure';
+import SendSuccess from './send-success/SendSuccess';
 
 const Home = () => {
-  const { storage }                        = useContext(ConfigContext);
-  const { form, onUpdateForm, submitForm } = useFormControl({
+  const { storage, web: webCfg } = useContext(ConfigContext);
+  const [noteId, setNoteId]      = useState(false);
+  const [submitError, setSubmitError]          = useState(false);
+
+  const { form, onUpdateForm, submitForm, resetForm } = useFormControl({
     content:           '',
     passphrase:        '',
     confirmPassphrase: '',
@@ -36,17 +41,18 @@ const Home = () => {
   });
 
   const submit = (data) => {
-    console.log(data);
-
     storage.store({
       'content':     CryptoJS.AES.encrypt(data.content, data.passphrase).toString(),
       'auto-expire': data.autoExpire,
     }).then(function (response) {
-      console.log(response);
-      // setNoteId(response.data['note-id']);
+      setNoteId(response.data['note-id']);
     }).catch(function (err) {
-      console.log(err);
+      setSubmitError(err.message);
     });
+  };
+
+  const generateLink = () => {
+    return webCfg.domain + '/view-note/' + noteId;
   };
 
   return (
@@ -55,7 +61,7 @@ const Home = () => {
         <Quote/>
 
         <Block classes={['mx-auto', 'w-full md:w-10/12 lg:w-8/12', 'border border-gray-200', 'shadow-sm']}>
-          <form action='#' onSubmit={(ev) => submitForm(submit, ev, true)}>
+          <form action='#' onSubmit={(ev) => submitForm(submit, ev)}>
             <Block classes={['p-3', 'bg-white']}>
               <ContentPanel form={form} changeEv={onUpdateForm}/>
               <PrivacyPanel form={form} changeEv={onUpdateForm}/>
@@ -79,6 +85,16 @@ const Home = () => {
             </p>
           </Block>
         </PinnedMessage>
+
+        {(noteId ? <SendSuccess closeHandler={() => {
+          resetForm();
+          setNoteId(false);
+        }} link={generateLink()}/> : <></>)}
+
+        {(submitError ? <SendFailure err={submitError} closeHandler={() => {
+          setSubmitError(false);
+        }} /> : <></>)}
+
       </Block>
     </>
   );
