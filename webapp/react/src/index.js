@@ -21,8 +21,6 @@ import { config, ConfigContext } from './SafeNotes/context/Config';
 import StorageEngine from './lib/StorageEngine';
 import SafeNotes from './SafeNotes';
 
-import * as serviceWorker from './serviceWorker';
-
 let AppConfig = {
   ...config,
   ...window.snenv,
