@@ -43,7 +43,7 @@ const DecryptForm = ({ content, onDecryptionSuccess }) => {
           inputCls={['p-2 mx-auto mb-4 shadow-sm border w-full md:w-8/12']}
           type="password"
           placeholder="Unlock Passphrase"
-          changeEv={(e) => onUpdateForm(e.target)}
+          changeEv={onUpdateForm}
           value={form.passphrase}
         />
 

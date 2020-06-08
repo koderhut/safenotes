@@ -1,7 +1,6 @@
 import React from "react";
 
-const ContentInput = (props) => {
-    const {name, placeHolder, readonly, disabled, onChange, content, styles} = props;
+const ContentInput = ({name, placeHolder, readonly, disabled, onChange, content, styles}) => {
     const style = "w-full text-gray-700 leading-tight focus:outline-none " + styles;
 
     return (

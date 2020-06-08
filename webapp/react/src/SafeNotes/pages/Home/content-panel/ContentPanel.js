@@ -35,7 +35,7 @@ const ContentPanel = ({ form, changeEv }) => {
       <ContentInput
         name="content"
         content={form.content}
-        onChange={(e) => changeEv(e)}
+        onChange={changeEv}
         styles={contentCls.join(' ')}
       />
     </Panel>

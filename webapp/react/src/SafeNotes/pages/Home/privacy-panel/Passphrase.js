@@ -48,7 +48,7 @@ const Passphrase = ({ passphrase, confirm, changeEv}) => {
           inputCls={inputCls}
           required={true}
           value={passphrase}
-          changeEv={(e) => changeEv(e.target)}
+          changeEv={changeEv}
         />
       </Block>
 
@@ -63,7 +63,7 @@ const Passphrase = ({ passphrase, confirm, changeEv}) => {
           inputCls={inputCls}
           required={true}
           value={confirm}
-          changeEv={(e) => changeEv(e.target)}
+          changeEv={changeEv}
         />
       </Block>
     </Block>

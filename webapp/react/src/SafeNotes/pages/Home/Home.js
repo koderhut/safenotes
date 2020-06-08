@@ -29,9 +29,9 @@ import SendFailure from './send-failure/SendFailure';
 import SendSuccess from './send-success/SendSuccess';
 
 const Home = () => {
-  const { storage, web: webCfg } = useContext(ConfigContext);
-  const [noteId, setNoteId]      = useState(false);
-  const [submitError, setSubmitError]          = useState(false);
+  const { storage, web: webCfg }      = useContext(ConfigContext);
+  const [noteId, setNoteId]           = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   const { form, onUpdateForm, submitForm, resetForm } = useFormControl({
     content:           '',
@@ -93,7 +93,7 @@ const Home = () => {
 
         {(submitError ? <SendFailure err={submitError} closeHandler={() => {
           setSubmitError(false);
-        }} /> : <></>)}
+        }}/> : <></>)}
 
       </Block>
     </>
