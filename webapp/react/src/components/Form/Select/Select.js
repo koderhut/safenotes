@@ -4,15 +4,14 @@ import PropTypes from 'prop-types';
 const Select = ({ name, selectCls, childCls, initValue, updateEv, options }) => {
 
   options = options.map((opt, index) => {
-    const isSelected = opt.value === initValue ? {'selected': true} : {};
-    return <option key={index} value={opt.value} className={childCls.join(' ')} {...isSelected}>{opt.text}</option>;
+    return <option key={index} value={opt.value} className={childCls.join(' ')}>{opt.text}</option>;
   });
 
   return (
     <select
       name={name}
       className={selectCls.join(' ')}
-      defaultValue={initValue}
+      value={initValue}
       onChange={(e) => updateEv(e.target)}
     >
       {options}
@@ -24,7 +23,7 @@ Select.propTypes = {
   name:         PropTypes.string.isRequired,
   selectCls:    PropTypes.array,
   childCls:     PropTypes.array,
-  initValue: PropTypes.string,
+  initValue:    PropTypes.string,
   updateEv:     PropTypes.func,
   options:      PropTypes.arrayOf(
     PropTypes.shape({

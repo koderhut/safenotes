@@ -1,9 +1,9 @@
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
 
 import Select from './Select';
 
-describe('it renders select box', () => {
+describe('Select: ', () => {
 
   test('renders empty select box', () => {
     const { getByRole } = render(<Select name={'test_box'} options={[]}/>);
@@ -60,7 +60,6 @@ describe('it renders select box', () => {
           </option>,
           <option
             class=""
-            selected=""
             value="test_item_2"
           >
             test item 2
@@ -70,24 +69,23 @@ describe('it renders select box', () => {
   });
 
   test('select box calls onChange', function () {
-    const handleUpdate  = jest.fn();
+    let testVal         = 'test_item_1';
+    const handleUpdate  = jest.fn((e) => testVal = e.value);
     const { container } = render(
       <Select
         name={'test_box'}
+        initValue={testVal}
         updateEv={handleUpdate}
         options={[{ text: 'test item 1', value: 'test_item_1' }, { text: 'test item 2', value: 'test_item_2' }]}
       />,
     );
-    const select        = container.firstChild;
-    const options       = select.children;
+    const select = container.firstChild;
 
     fireEvent.change(select, { target: { value: 'test_item_2' } });
 
     expect(handleUpdate).toHaveBeenCalledTimes(1);
     expect(handleUpdate).toHaveBeenCalledWith(select);
-    expect(select.value).toBe('test_item_2');
-    expect(options[0].selected).toBeFalsy();
-    expect(options[1].selected).toBeTruthy();
+    expect(testVal).toBe('test_item_2');
   });
 
 });

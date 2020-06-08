@@ -10,7 +10,7 @@ const SimpleInput = ({
   name,
   type,
   inputCls,
-  defaultValue,
+  value,
   changeEv,
   blurEv,
   focusEv,
@@ -23,9 +23,19 @@ const SimpleInput = ({
   maxLength,
   pattern,
   step,
+  attrs,
 }) => {
 
   const inputClsNames = inputCls.join(' ');
+  let extraArgs       = {};
+
+  [min, max, minLength, maxLength, pattern, step].map((val, index, extraAttrs) => {
+    if (val === undefined) {
+      return extraArgs;
+    }
+
+    return extraArgs[index] = val;
+  });
 
   return (
     <>
@@ -34,73 +44,64 @@ const SimpleInput = ({
              name={name}
              type={type}
              className={inputClsNames}
-             defaultValue={defaultValue}
-             defaultChecked={defaultValue}
+             value={value}
              onChange={(e) => changeEv(e.target)}
              onBlur={(e) => blurEv(e.target)}
              onFocus={(e) => focusEv(e.target)}
              placeholder={placeholder}
              required={required}
              disabled={disabled}
-             min={min}
-             max={max}
-             minLength={minLength}
-             maxLength={maxLength}
-             pattern={pattern}
-             step={step}
+             {...extraArgs}
+             {...attrs}
       />
     </>
   );
 };
 
 SimpleInput.propTypes = {
-  label:        PropTypes.string,
-  labelCls:     PropTypes.array,
-  id:           PropTypes.string,
-  name:         PropTypes.string.isRequired,
-  type:         PropTypes.oneOf(['text', 'email', 'password', 'tel', 'number']).isRequired,
-  inputCls:     PropTypes.array,
-  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  changeEv:     PropTypes.func,
-  blurEv:       PropTypes.func,
-  focusEv:      PropTypes.func,
-  placeholder:  PropTypes.string,
-  disabled:     PropTypes.bool,
-  required:     PropTypes.bool,
-  min:          PropTypes.number,
-  max:          PropTypes.number,
-  minLength:    PropTypes.number,
-  maxLength:    PropTypes.number,
-  pattern:      PropTypes.string,
-  step:         PropTypes.number,
-  color:        PropTypes.oneOf(
+  label:       PropTypes.string,
+  labelCls:    PropTypes.array,
+  id:          PropTypes.string,
+  name:        PropTypes.string.isRequired,
+  type:        PropTypes.oneOf(['text', 'email', 'password', 'tel', 'number']).isRequired,
+  inputCls:    PropTypes.array,
+  ctrlValue:   PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  changeEv:    PropTypes.func,
+  blurEv:      PropTypes.func,
+  focusEv:     PropTypes.func,
+  placeholder: PropTypes.string,
+  disabled:    PropTypes.bool,
+  required:    PropTypes.bool,
+  min:         PropTypes.number,
+  max:         PropTypes.number,
+  minLength:   PropTypes.number,
+  maxLength:   PropTypes.number,
+  pattern:     PropTypes.string,
+  step:        PropTypes.number,
+  attrs:       PropTypes.object,
+  color:       PropTypes.oneOf(
     ['primary', 'info', 'success', 'warning', 'danger']),
 };
 
 SimpleInput.defaultProps = {
-  label:        '',
-  labelCls:     [],
-  id:           'input',
-  name:         'input',
-  type:         'text',
-  inputCls:     ['input'],
-  defaultValue: '',
-  changeEv:     () => {
+  label:       '',
+  labelCls:    [],
+  id:          'input',
+  name:        'input',
+  type:        'text',
+  inputCls:    ['input'],
+  ctrlValue:   '',
+  changeEv:    () => {
   },
-  blurEv:       () => {
+  blurEv:      () => {
   },
-  focusEv:      () => {
+  focusEv:     () => {
   },
-  placeholder:  '',
-  disabled:     false,
-  required:     false,
-  min:          0,
-  max:          0,
-  minLength:    0,
-  maxLength:    0,
-  pattern:      '',
-  step:         0,
-  color:        'primary',
+  placeholder: '',
+  disabled:    false,
+  required:    false,
+  color:       'primary',
+  attrs:       {},
 };
 
 export default SimpleInput;
