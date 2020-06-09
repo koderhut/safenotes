@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const Block = ({ classes, attrs, children }) => {
+import OffIcon from './OffIcon';
+import OnIcon from './OnIcon';
+
+const PrivacyEye = ({ classes, initMode, changeEv }) => {
+  const [mode, setMode] = useState(initMode);
+  classes = ['absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5', ...classes];
 
   return (
-    <div className={classes.join(' ')} {...attrs}>
-      {children != null ? children : <p>This is an empty block!</p>}
+    <div className={classes} onClick={(e) => { setMode(!mode); changeEv(e); }}>
+      {( !mode ? <OffIcon /> : <OnIcon />)}
     </div>
   );
 };
 
-Block.propTypes = {
-  classes:  PropTypes.array,
-  attrs:    PropTypes.object,
-  children: PropTypes.any,
+PrivacyEye.propTypes = {
+  classes: PropTypes.arrayOf(PropTypes.string),
+  initMode: PropTypes.bool,
+  changeEv: PropTypes.func,
 };
 
-Block.defaultProps = {
-  classes:  [],
-  attrs:    {},
-  children: null,
+PrivacyEye.defaultProps = {
+  classes: [],
+  initMode: false,
+  changeEv: () => {},
 };
 
-export default Block;
+export default PrivacyEye;

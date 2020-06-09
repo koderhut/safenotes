@@ -13,7 +13,7 @@ const Logo = ({ firstLine, secondLine, wrapClasses, slClasses, image, imageWidth
     } else {
       return <>
         {firstLine}
-        {secondLine || <div className={slClasses.join(' ')}>by &lt;koderhut.eu/&gt;</div>}
+        {secondLine || <div className={slClasses.join(' ')}>by &lt;koderhut.eu /&gt;</div>}
       </>;
     }
   };

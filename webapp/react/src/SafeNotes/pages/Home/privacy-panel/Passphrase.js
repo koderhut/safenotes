@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropType from 'prop-types';
 
 import SimpleInput from '../../../../components/Form/SimpleInput/SimpleInput';
+import Label from '../../../../components/Label/Label';
 import Block from '../../../../components/Page/Block/Block';
+import PrivacyEye from '../../../../components/PrivacyEye/PrivacyEye';
 
-const Passphrase = ({ passphrase, confirm, changeEv}) => {
+const Passphrase = ({ passphrase, changeEv}) => {
+  const [inputType, setInputType] = useState('password');
   const inputCls        = [
     'my-1',
     'shadow-sm hover:shadow focus:shadow-outline',
@@ -33,40 +36,32 @@ const Passphrase = ({ passphrase, confirm, changeEv}) => {
     'focus:outline-none',
     'focus:bg-white',
     'w-full',
+    'relative'
   ];
 
-  return (
-    <Block classes={['flex', 'flex-col', 'sm:flex-row']}>
-      <Block classes={['w-full sm:w-1/2 sm:mr-1']}>
-        <SimpleInput
-          label={'Passphrase'}
-          labelCls={['w-full block uppercase tracking-wide text-gray-500 text-xs font-bold mb-1 mt-2']}
-          type='password'
-          placeholder='Passphrase'
-          id='passphrase'
-          name='passphrase'
-          inputCls={inputCls}
-          required={true}
-          value={passphrase}
-          changeEv={changeEv}
-        />
-      </Block>
+  const privacyMode = () => {
+       setInputType(inputType === 'password' ? 'text' : 'password');
+  }
 
-      <Block classes={['w-full sm:w-1/2 sm:ml-1']}>
-        <SimpleInput
-          label={'Confirm Passphrase'}
-          labelCls={['w-full block uppercase tracking-wide text-gray-500 text-xs font-bold mb-1 mt-2']}
-          type='password'
-          placeholder='Confirm Passphrase'
-          id='confirm-passphrase'
-          name='confirmPassphrase'
-          inputCls={inputCls}
-          required={true}
-          value={confirm}
-          changeEv={changeEv}
-        />
+  return (
+      <Block classes={['w-full sm:w-2/3 sm:mr-1 block uppercase tracking-wide text-gray-500 font-bold relative']}>
+        <Label labelFor='passphrase' text='Passphrase' classNames={['w-full block uppercase tracking-wide text-gray-500 text-xs font-bold mb-1 mt-2 block']} />
+
+        <Block classes={['relative']} >
+          <SimpleInput
+            type={inputType}
+            placeholder='Passphrase'
+            id='passphrase'
+            name='passphrase'
+            inputCls={inputCls}
+            required={true}
+            value={passphrase}
+            changeEv={changeEv}
+          />
+
+          <PrivacyEye changeEv={(e) => privacyMode()} />
+        </Block>
       </Block>
-    </Block>
   );
 };
 
