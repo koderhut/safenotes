@@ -37,5 +37,11 @@ static-site:
              {"value": "48h", "label": "2 days"},
              {"value": "168h", "label": "7 days"},
          ]
+       },
+       "theme": {
+           "logo": {
+               "image": "/app/new-logo.png",
+               "imageCss": ['object-contain h-36 w-48 pt-2']
+           }
        }
      }

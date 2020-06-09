@@ -35,15 +35,15 @@ const AutoExpire = ({ options, selected, onChange }) => {
     'leading-tight',
     'focus:outline-none',
   ];
-  const labelCls = ['block uppercase tracking-wide text-xs text-gray-500 font-bold mb-1 mt-2'];
+  const labelCls = ['w-full xsm:w-1/2 block uppercase tracking-wide text-xs text-gray-500 font-bold mb-1 mt-2'];
 
   return (
-    <>
+    <Block classes={['flex flex-col', 'w-full sm:w-1/3', 'sm:ml-1']}>
       <Label classNames={labelCls}>
-        <span className="hidden sm:inline">Automatically</span> expire after:
+        <span className="hidden lg:inline">Automatically</span> expire after:
       </Label>
 
-      <Block classes={["relative"]}>
+      <Block classes={["relative", "w-full", "py-1"]}>
         <Select name={'autoExpire'} initValue={selected} options={options} updateEv={onChange} selectCls={selectCls}/>
 
         <Block classes={['pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700']}>
@@ -52,7 +52,7 @@ const AutoExpire = ({ options, selected, onChange }) => {
           </svg>
         </Block>
       </Block>
-    </>
+    </Block>
   );
 };
 

@@ -27,7 +27,7 @@ const PrivacyPanel = ({ form, changeEv }) => {
   const { web: webCfg } = useContext(ConfigContext);
 
   return (
-    <Panel title={'Privacy'} wrapCss={['my-4']} titleBarCss={['text-base text-blue-400 font-bold pl-2 border border-gray-300 shadow-sm rounded-sm relative p-2']}>
+    <Panel title={'Privacy'} wrapCss={['my-4']} viewPortCss={['flex flex-col sm:flex-row']} titleBarCss={['text-base text-blue-400 font-bold pl-2 border border-gray-300 shadow-sm rounded-sm relative p-2']}>
       <Passphrase passphrase={form.passphrase} confirm={form.confirmPassphrase} changeEv={changeEv}/>
 
       <AutoExpire options={webCfg.expirationOptions} selected={form.autoExpire} onChange={changeEv}/>
