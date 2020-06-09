@@ -32,7 +32,7 @@ const SafeNotes = () => {
   const { theme } = useContext(ConfigContext);
 
   return (
-    <Router basename={process.env.REACT_APP_SAFENOTE_BASE_PATH}>
+    <Router basename={process.env.REACT_APP_SAFENOTES_BASE_PATH}>
       <Layout classes={['safe-notes', 'container', 'mx-auto', 'px-2']}>
 
         <Header classes={['flex']}>

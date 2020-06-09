@@ -90,7 +90,7 @@ func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // envJS serve the env.js config for the React SPA
 // It helps make the SPA app more configurable
 func (sw StaticSite) envJs(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/javascript")
 
 	w.Write([]byte(sw.config.EnvJs))
 }
