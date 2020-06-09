@@ -25,7 +25,7 @@ const ModalMessage = ({ rootEl, reset, children }) => {
   const content = <>
     <div className="flex flex-wrap items-center fixed pin bg-semi-75">
       <div className="flex-1 self-end md:px-10 ">
-        <div className="bg-white mx-auto w-full sm:w-10/12 lg:w-6/12 border shadow-sm relative p-3 rounded-sm ">
+        <div className="bg-white mx-auto w-full md:w-11/12 lg:w-8/12 xl:w-6/12 border shadow-sm relative p-3 rounded-sm ">
           <span className="absolute top-0 right-0 p-2 z-50">
               <svg className="h-6 w-6 fill-current text-grey hover:text-grey-darkest" role="button" onClick={reset} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <title>Close</title>
