@@ -26,7 +26,7 @@ describe('render a logo', () => {
         <div
           class="test second-line"
         >
-          by &lt;koderhut.eu/&gt;
+          by &lt;koderhut.eu /&gt;
         </div>
       </div>
     `);
