@@ -24,6 +24,7 @@ import { ConfigContext } from '../../context/Config';
 import PinnedMessage from '../../shared/PinnedMessage/PinnedMessage';
 import Quote from '../../shared/Quote/Quote';
 import ContentPanel from './content-panel/ContentPanel';
+import NotifyPanel from './notify-panel/NotifyPanel';
 import PrivacyPanel from './privacy-panel/PrivacyPanel';
 import SendFailure from './send-failure/SendFailure';
 import SendSuccess from './send-success/SendSuccess';
@@ -37,13 +38,16 @@ const Home = () => {
     content:           '',
     passphrase:        '',
     confirmPassphrase: '',
-    expiration:        'on-read',
+    autoExpire:        'on-read',
+    emailRecipient:    '',
+    emailSender:       '',
   });
 
   const submit = (data) => {
     storage.store({
       'content':     CryptoJS.AES.encrypt(data.content, data.passphrase).toString(),
       'auto-expire': data.autoExpire,
+      'notify': { 'recipient': data.emailRecipient, 'sender': data.emailSender }
     }).then(function (response) {
       setNoteId(response.data['note-id']);
     }).catch(function (err) {
@@ -65,6 +69,7 @@ const Home = () => {
             <Block classes={['p-3', 'bg-white']}>
               <ContentPanel form={form} changeEv={onUpdateForm}/>
               <PrivacyPanel form={form} changeEv={onUpdateForm}/>
+              <NotifyPanel form={form} changeEv={onUpdateForm} />
             </Block>
 
             <div className="bottom flex bg-gray-100 justify-end px-3 rounded">
