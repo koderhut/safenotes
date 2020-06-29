@@ -20,7 +20,7 @@ import ContentInput from '../../../../components/Form/ContentInput/ContentInput'
 import Panel from '../../../../components/Panel/Panel';
 
 const ContentPanel = ({ form, changeEv }) => {
-  const panelCls = ['text-base text-blue-400 font-bold border border-gray-300 shadow-sm rounded-sm relative p-2'];
+  const panelCls = ['text-base text-blue-400 font-bold border border-blue-200 shadow-sm rounded-sm relative p-2'];
   const contentCls = [
     'shadow-sm hover:shadow focus:shadow-outline',
     'border border-gray-400 hover:border-gray-500',
@@ -31,12 +31,14 @@ const ContentPanel = ({ form, changeEv }) => {
   ];
 
   return (
-    <Panel title={'Add Your Sensitive Content'} titleBarCss={panelCls}>
+    <Panel title={'Content'} titleBarCss={panelCls}>
       <ContentInput
         name="content"
         content={form.content}
         onChange={changeEv}
         styles={contentCls.join(' ')}
+        autofocus={true}
+        placeHolder={'Add Your Sensitive Content Here'}
       />
     </Panel>
   );

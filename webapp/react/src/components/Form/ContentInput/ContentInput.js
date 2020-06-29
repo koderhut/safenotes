@@ -14,38 +14,40 @@
  * limitations under the License.
  */
 
-import React from "react";
+import React from 'react';
 
-const ContentInput = ({name, placeHolder, readonly, disabled, onChange, content, styles}) => {
-    const style = "w-full text-gray-700 leading-tight focus:outline-none " + styles;
+const ContentInput = ({ name, placeHolder, readonly, disabled, onChange, content, styles, autofocus }) => {
+  const style = 'w-full text-gray-700 leading-tight focus:outline-none ' + styles;
 
-    return (
-        <>
+  return (
+    <>
             <textarea
-                id="content"
-                name={name}
-                className={style}
-                rows="10"
-                placeholder={placeHolder}
-                required
-                readOnly={readonly}
-                disabled={disabled}
-                onChange={(e) => onChange(e.target)}
-                value={content}
+              id="content"
+              name={name}
+              className={style}
+              rows="10"
+              placeholder={placeHolder}
+              required
+              readOnly={readonly}
+              disabled={disabled}
+              onChange={(e) => onChange(e.target)}
+              value={content}
+              autoFocus={true}
             />
-        </>
-    );
+    </>
+  );
 };
 
 ContentInput.defaultProps = {
-    name:        "content-input",
-    placeHolder: "",
-    readonly:    false,
-    disabled:    false,
-    onChange:    () => {
-    },
-    content:     "",
-    styles: "",
+  name:        'content-input',
+  placeHolder: '',
+  readonly:    false,
+  disabled:    false,
+  onChange:    () => {
+  },
+  content:     '',
+  styles:      '',
+  autofocus:   false,
 };
 
 export default ContentInput;
