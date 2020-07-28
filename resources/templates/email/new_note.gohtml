@@ -4,15 +4,50 @@
     <title>You received a SafeNote link</title>
 </head>
 <body>
-<div>
-    <h1>You are receiving this email because you were sent a safe note.</h1>
-    <div>
-        <p>You can open your safenote by clicking the following link: </p>
-        <br />
-        <p>
-            <a href="{{ index . 0 | generateLink }}" target="_blank">{{ index . 0 | generateLink }}</a>
-        </p>
-    </div>
-</div>
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <div data-type="logo" class="flex flex-col mx-auto sm:w-full md:w-10/12 lg:w-8/12">
+                <a href="/" class="flex">
+                    <h1 class="text-3xl text-left pt-2 font-extrabold text-blue-500">safe</h1>
+                    <h1 class="text-3xl text-left pt-2 font-extrabold text-gray-500">notes</h1>
+                </a>
+                <div class="text-sm text-gray-500 italic">by &lt;koderhut.eu /&gt;</div>
+            </div>
+        </td>
+
+    </tr>
+    <tr>
+        <td><h4>You are receiving this email because you were sent a safe note. You can open your safenote by clicking the following link:</h4></td>
+    </tr>
+    <tr>
+        <td><a href="{{ index . 0 | generateLink }}" target="_blank">{{ index . 0 | generateLink }}</a></td>
+    </tr>
+    </tbody>
+</table>
 </body>
+<style>
+    .text-blue-500 {
+        color: #4299e1;
+        font-size: 1.875rem;
+        text-align: left;
+        float: left;
+        margin: 0;
+    }
+    .text-gray-500 {
+        color: #a0aec0;
+        font-size: 1.875rem;
+        text-align: left;
+        float: left;
+        margin: 0;
+    }
+    .italic {
+        font-style: italic;
+        color: #a0aec0;
+        font-size:.875rem;
+        clear: left;
+        margin: 0 0 0 36px;
+    }
+</style>
 </html>
