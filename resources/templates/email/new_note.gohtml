@@ -1,0 +1,18 @@
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>You received a SafeNote link</title>
+</head>
+<body>
+<div>
+    <h1>You are receiving this email because you were sent a safe note.</h1>
+    <div>
+        <p>You can open your safenote by clicking the following link: </p>
+        <br />
+        <p>
+            <a href="{{ index . 0 | generateLink }}" target="_blank">{{ index . 0 | generateLink }}</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
