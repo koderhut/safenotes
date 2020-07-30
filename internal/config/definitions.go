@@ -15,12 +15,19 @@ limitations under the License.
 */
 package config
 
+import (
+	notify "github.com/koderhut/safenotes/notification"
+	"github.com/koderhut/safenotes/sketch"
+)
+
 // Top level options
 type Parameters struct {
-	Server     ServerParams
-	Api        ApiParams  `mapstructure:"web-api"`
-	StaticSite StaticSite `mapstructure:"static-site"`
-	Verbose    bool
+	Server        ServerParams
+	Api           ApiParams  `mapstructure:"web-api"`
+	StaticSite    StaticSite `mapstructure:"static-site"`
+	Verbose       bool
+	Notifications notify.Config
+	Sketch 		  sketch.Config
 }
 
 // Parameters for configuring the server part
