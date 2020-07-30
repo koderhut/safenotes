@@ -40,7 +40,10 @@ func TestMemoryRepo_FetchByID(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewMemoryRepo()
-			n, _ := s.Store(tt.content) // try storing a test note
+			n := NewNote(func(note *Note) {
+				note.Content = tt.content
+			})
+			 _, _ = s.Store(n)
 
 			id := tt.testId
 			if id == "" {
@@ -77,7 +80,10 @@ func TestMemoryRepo_Pop(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewMemoryRepo()
-			n, _ := s.Store(tt.content) // try storing a test note
+			n := NewNote(func(note *Note) {
+				note.Content = tt.content
+			})
+			_, _ = s.Store(n)
 
 			id := tt.testId
 			if id == "" {
@@ -110,7 +116,10 @@ func TestMemoryRepo_Store(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewMemoryRepo()
 
-			got, err := s.Store(tt.content)
+			n := NewNote(func(note *Note) {
+				note.Content = tt.content
+			})
+			got, err := s.Store(n)
 
 			if err != nil {
 				t.Errorf("Store() error = %v", err)
@@ -145,8 +154,11 @@ func TestMemoryRepo_StoreWithTimeout(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewMemoryRepo()
+			n := NewNote(func(note *Note) {
+				note.Content = tt.content
+			})
 
-			got, err := s.StoreWithTimeout(tt.content, tt.expire)
+			got, err := s.StoreWithTimeout(n, tt.expire)
 
 			if err != nil {
 				t.Errorf("StoreWithTimeout() error = %v", err)
@@ -162,8 +174,10 @@ func TestMemoryRepo_StoreWithTimeout(t *testing.T) {
 	for _, tt := range errTests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewMemoryRepo()
-
-			_, err := s.StoreWithTimeout(tt.content, tt.expire)
+			n := NewNote(func(note *Note) {
+				note.Content = tt.content
+			})
+			_, err := s.StoreWithTimeout(n, tt.expire)
 
 			if err == nil || err.Error() != tt.err {
 				t.Errorf("Expected error [%v]; got [%v]", tt.err, err)
@@ -185,8 +199,11 @@ func TestMemoryRepo_AutoExpireNote(t *testing.T) {
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			s := NewMemoryRepo()
+			n := NewNote(func(note *Note) {
+				note.Content = tc.note
+			})
 
-			n, err := s.StoreWithTimeout(tc.note, tc.expiration)
+			n, err := s.StoreWithTimeout(n, tc.expiration)
 			if err != nil {
 				t.Errorf("Unexpected error fetching note; got [%v]", err)
 			}
@@ -207,7 +224,7 @@ func TestMemoryRepo_AutoExpireNote(t *testing.T) {
 
 			// try fetching again the note
 			_, err = s.FetchByID(n.ID.String())
-			if err != ErrNotFound {
+			if err == nil || err != ErrNotFound {
 				t.Errorf("Expected [%v]; got [%v]", ErrNotFound, err)
 			}
 		})
@@ -226,8 +243,11 @@ func TestMemoryRepo_CancellingAutoExpireNote(t *testing.T) {
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			s := NewMemoryRepo()
+			n := NewNote(func(note *Note) {
+				note.Content = tc.note
+			})
 
-			n, err := s.StoreWithTimeout(tc.note, tc.expiration)
+			n, err := s.StoreWithTimeout(n, tc.expiration)
 			if err != nil {
 				t.Errorf("Unexpected error fetching note; got [%v]", err)
 			}

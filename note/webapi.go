@@ -18,29 +18,31 @@ package note
 import (
 	"encoding/json"
 	"errors"
-	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
+	ev "github.com/koderhut/safenotes/events"
+	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"github.com/koderhut/safenotes/webapp/contracts"
 )
 
 // NotesWebApi controller
 type WebApi struct{
 	notesStorage Repository
+	eventStream  ev.Broker
 }
 
 // NewWebApi initialize a new controller
-func NewWebApi(repository Repository) *WebApi {
-	return &WebApi{notesStorage: repository}
+func NewWebApi(repository Repository, evStream ev.Broker) *WebApi {
+	return &WebApi{notesStorage: repository, eventStream: evStream}
 }
-
+// @deprecated
 func NewWithMemoryRepo() *WebApi {
-	return NewWebApi(NewMemoryRepo())
+	return NewWebApi(NewMemoryRepo(), nil)
 }
 
-// Register the Notes api endpoints
+// RegisterRoutes the Notes api endpoints
 func (nc WebApi) RegisterRoutes(r *mux.Router) {
 	notes := r.PathPrefix("/notes").Subrouter()
 
@@ -71,6 +73,9 @@ func (nc WebApi) Retrieve(w http.ResponseWriter, r *http.Request) {
 	reply := ContentMessage{Status: true, Content: note.Content}
 
 	json.NewEncoder(w).Encode(&reply)
+
+	// publish a note read event
+	nc.eventStream.Publish(NewFetchedEvent(*note))
 }
 
 // Store controller to save into memory the secret note
@@ -95,10 +100,12 @@ func (nc WebApi) Store(w http.ResponseWriter, r *http.Request) {
 		err error
 	)
 
+	note = NewNote(FromInput(message))
+
 	if message.IsAutoExpire() {
-		note, err = nc.notesStorage.StoreWithTimeout(message.Content, message.AutoExpire)
+		_, err = nc.notesStorage.StoreWithTimeout(note, message.AutoExpire)
 	} else {
-		note, err = nc.notesStorage.Store(message.Content)
+		_, err = nc.notesStorage.Store(note)
 	}
 
 	if nil != err {
@@ -111,4 +118,7 @@ func (nc WebApi) Store(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(&LinkMessage{Status: true, Id: note.ID.String()})
+
+	// publish a new note event
+	nc.eventStream.Publish(NewStoredEvent(*note))
 }
