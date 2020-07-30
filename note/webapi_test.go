@@ -26,6 +26,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 
+	ev "github.com/koderhut/safenotes/events"
 	. "github.com/koderhut/safenotes/note"
 	"github.com/koderhut/safenotes/webapp/contracts"
 )
@@ -33,7 +34,7 @@ import (
 func TestWebApi_RegisterRoutes(t *testing.T) {
 	var (
 		testRouter = mux.NewRouter()
-		api        = NewWithMemoryRepo()
+		api        = NewWebApi(NewMemoryRepo(), mockStream())
 		routes     = map[string]map[string]string{
 			"/notes_": {
 				"methods": "",
@@ -79,9 +80,12 @@ func TestWebApi_Retrieve(t *testing.T) {
 	}
 
 	repo := NewMemoryRepo()
-	n, _ := repo.Store("test_content")
+	n := NewNote(func(note *Note) {
+		note.Content = "test_content"
+	})
+	_, _ = repo.Store(n)
 
-	notesApi := NewWebApi(repo)
+	notesApi := NewWebApi(repo, mockStream())
 	r := httptest.NewRequest("GET", "http://localhost/api/notes/", nil)
 	req := mux.SetURLVars(r, map[string]string{"note": n.ID.String()})
 	tests := []struct {
@@ -132,7 +136,7 @@ func TestWebApi_Store(t *testing.T) {
 		c string
 	}
 	var (
-		notesApi = NewWithMemoryRepo()
+		notesApi = NewWebApi(NewMemoryRepo(), mockStream())
 		tests    = []struct {
 			name   string
 			args   args
@@ -240,3 +244,11 @@ func TestValidate_InputMessage(t *testing.T) {
 		})
 	}
 }
+
+func mockStream() ev.Broker {
+	return &MockStream{}
+}
+
+type MockStream struct {}
+func (m MockStream) Publish(e ev.Event) {}
+func (m MockStream) Subscribe(l ev.Subscriber){}

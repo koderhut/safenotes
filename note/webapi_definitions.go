@@ -17,6 +17,7 @@ package note
 
 import (
 	"fmt"
+
 	"gopkg.in/go-playground/validator.v9"
 )
 
@@ -24,6 +25,7 @@ import (
 type InputMessage struct {
 	Content    string `json:"content" validate:"required,min=1"`
 	AutoExpire string `json:"auto-expire,omitempty" validate:"omitempty,expire-interval"`
+	Notify     Notification `json:"notify,omitempty"`
 }
 
 // InputMessage.IsValid is used to validate data passed from the client
@@ -46,12 +48,12 @@ func (in *InputMessage) IsValid() (bool, []string) {
 
 func (in *InputMessage) IsAutoExpire() bool {
 	switch in.AutoExpire {
-	case EXPIRE_AFTER_5M,
-		EXPIRE_AFTER_30M,
-		EXPIRE_AFTER_1H,
-		EXPIRE_AFTER_1DAY,
-		EXPIRE_AFTER_2DAY,
-		EXPIRE_AFTER_7DAY:
+	case ExpireAfter5M,
+		ExpireAfter30M,
+		ExpireAfter1H,
+		ExpireAfter1DAY,
+		ExpireAfter2DAY,
+		ExpireAfter7DAY:
 		return true
 	default:
 		return false

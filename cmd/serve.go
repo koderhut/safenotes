@@ -19,18 +19,20 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/lajosbencz/glo"
 	"os"
 	"os/signal"
 	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/lajosbencz/glo"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 
+	"github.com/koderhut/safenotes/events"
 	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"github.com/koderhut/safenotes/note"
+	"github.com/koderhut/safenotes/notification"
 	"github.com/koderhut/safenotes/staticsite"
 	"github.com/koderhut/safenotes/webapp"
 )
@@ -46,8 +48,9 @@ expose the API endpoints for the service
 
 	Run: func(cmd *cobra.Command, args []string) {
 		wait := time.Second * 15
-		apiRoutes := []webapp.WebRouting{note.NewWithMemoryRepo()}
-		rootRoutes := []webapp.WebRouting{}
+		evStream := events.NewBroker()
+		apiRoutes := []webapp.WebRouting{note.NewWebApi(note.NewMemoryRepo(), evStream)}
+		rootRoutes := make([]webapp.WebRouting, 0)
 
 		if cfg.StaticSite.Serve == true {
 			rootRoutes = append(rootRoutes, staticsite.NewHandler(cfg.StaticSite))
@@ -61,23 +64,36 @@ expose the API endpoints for the service
 			os.Exit(1)
 		}
 
-		logs.Writer.Info(fmt.Sprintf(">>> memory-notes web service is ready to receive requests on: [%s]", srv.GetListeningAddr()))
-
+		logErr(notification.ConfigureHandler(cfg.Notifications))
+		logErr(note.InitSketch(cfg.Sketch))
 		printRegisteredRoutes(router)
 
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, os.Kill)
 
+		if err = notification.ConfigureHandler(cfg.Notifications); err != nil {
+			logs.Writer.Warning(err.Error())
+		}
+
+		note.RegisterSubscribers(evStream)
+
+		logs.Writer.Info(fmt.Sprintf(">>> memory-notes web service is ready to receive requests on: [%s]", srv.GetListeningAddr()))
 		<-c
 
 		ctx, cancel := context.WithTimeout(context.Background(), wait)
 		defer cancel()
-		srv.Shutdown(ctx)
+		_ = srv.Shutdown(ctx)
 
 		logs.Writer.Info(fmt.Sprintf(">>> memory-notes web service has shutdown"))
 
 		os.Exit(0)
 	},
+}
+
+func logErr(err error) {
+	if err != nil {
+		logs.Writer.Error(err.Error())
+	}
 }
 
 func printRegisteredRoutes(router *mux.Router) {
@@ -87,7 +103,7 @@ func printRegisteredRoutes(router *mux.Router) {
 	table := tablewriter.NewWriter(&buf)
 	table.SetHeader([]string{"Route", "Methods", "Name"})
 
-	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+	_ = router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		routePath, _ := route.GetPathTemplate()
 		methods, _ := route.GetMethods()
 

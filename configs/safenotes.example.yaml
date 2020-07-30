@@ -1,0 +1,63 @@
+verbose:     false
+server:
+  ip:        0.0.0.0
+  port:      80
+  https:
+    enable:      false
+    port:        443
+    cert:        ./config/cert.pem
+    cert-key:    ./config/key.pem
+    server-name: localhost
+    enable-redirect: true
+    redirect-to: https://localhost/
+  auth:
+    realm: localhost-restricted
+    user: ~
+    pass: ~
+
+web-api:
+  domain:      localhost
+  cors-host:   "localhost"
+  path-prefix: /api
+
+static-site:
+  serve:     true
+  index:     index.html
+  resources: ./www
+  envjs:     |
+     window.snenv={
+       "web":{
+         "domain":"http://localhost/app",
+         "storage_path":"http://localhost/api",
+         "expirationOptions": [
+             {"value": "on-read", "text": "After Opening"},
+             {"value": "5m", "text": "5 minutes"},
+             {"value": "30m", "text": "30 minutes"},
+             {"value": "1h", "text": "1 hour"},
+             {"value": "24h", "text": "1 day"},
+             {"value": "48h", "text": "2 days"},
+             {"value": "168h", "text": "7 days"}
+         ]
+       },
+       "theme": {
+           "logo": {
+               "image": "/app/new-logo.png",
+               "imageCss": ['object-contain h-36 w-48 pt-2']
+           }
+       }
+     }
+
+sketch:
+  templatesDir: resources/templates/email
+  functions:
+    generateLink: https://localhost:3000/app/view-note/%s
+
+notifications:
+  enable: false
+  engines:
+    email:
+      server: "mail.server.com"
+      port: 1234
+      auth:
+        user: no-user
+        pass: no-pass

@@ -20,16 +20,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
-
 	"github.com/koderhut/safenotes/internal/utilities/logs"
 )
 
 type Repository interface {
-	FetchByID(id string) (*Note, error)
-	Pop(id string) (*Note, error)
-	Store(content string) (*Note, error)
-	StoreWithTimeout(content string, until string) (*Note, error)
+	FetchByID(string) (*Note, error)
+	Pop(string) (*Note, error)
+	Store(*Note) (*Note, error)
+	StoreWithTimeout(*Note, string) (*Note, error)
 }
 
 type MemoryRepo struct {
@@ -50,16 +48,11 @@ func (s MemoryRepo) FetchByID(id string) (*Note, error) {
 	return note, err
 }
 
-//Store retrieves a note based on it's ID
-func (s *MemoryRepo) Store(content string) (*Note, error) {
-	note := Note{
-		ID:      uuid.New(),
-		Content: content,
-		Date:    time.Now(),
-	}
-	s.stored = append(s.stored, &note)
+// Store retrieves a note based on it's ID
+func (s *MemoryRepo) Store(note *Note) (*Note, error) {
+	s.stored = append(s.stored, note)
 
-	return &note, nil
+	return note, nil
 }
 
 // Pop is used to retrieve a note and remove it from the collection at the same time
@@ -76,8 +69,8 @@ func (s *MemoryRepo) Pop(id string) (*Note, error) {
 	return note, err
 }
 
-func (s *MemoryRepo) StoreWithTimeout(content string, until string) (*Note, error) {
-	note, err := s.Store(content)
+func (s *MemoryRepo) StoreWithTimeout(note *Note, until string) (*Note, error) {
+	note, err := s.Store(note)
 	if err != nil {
 		return nil, err
 	}

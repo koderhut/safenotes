@@ -26,14 +26,44 @@ type Note struct {
 	ID      uuid.UUID
 	Content string
 	Date    time.Time
+	Notify  Notification
+}
+
+type Notification struct {
+	Recipient string
+	Sender    string
 }
 
 const (
-	EXPIRE_ON_READ    = "on-read"
-	EXPIRE_AFTER_5M   = "5m"
-	EXPIRE_AFTER_30M  = "30m"
-	EXPIRE_AFTER_1H   = "1h"
-	EXPIRE_AFTER_1DAY = "24h"
-	EXPIRE_AFTER_2DAY = "48h"
-	EXPIRE_AFTER_7DAY = "168h"
+	ExpireOnRead    = "on-read"
+	ExpireAfter5M   = "5m"
+	ExpireAfter30M  = "30m"
+	ExpireAfter1H   = "1h"
+	ExpireAfter1DAY = "24h"
+	ExpireAfter2DAY = "48h"
+	ExpireAfter7DAY = "168h"
 )
+
+type NoteOptions func(*Note)
+
+func NewNote(opts ...NoteOptions) *Note {
+	n := &Note{
+		ID:      uuid.New(),
+		Content: "",
+		Date:    time.Time{},
+		Notify:  Notification{},
+	}
+
+	for _, opt := range opts {
+		opt(n)
+	}
+
+	return n
+}
+
+func FromInput(input InputMessage) NoteOptions {
+	return func(note *Note) {
+		note.Content = input.Content
+		note.Notify = input.Notify
+	}
+}
