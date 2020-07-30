@@ -52,8 +52,8 @@ Support is available through the Github Issues. If you find any bugs with the ap
 For security issues please email me at <MAILTO:sn.security@rendler.me>
 
 ## Sponsors
-I am happy to say that ![Jetbrains logo](./docs/assets/jetbrains.png) [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
-is supporting this application's development through their [Open-Source sponsorship program.](https://www.jetbrains.com/community/opensource/#support) 
+I am happy to say that <img src="./docs/assets/jetbrains.png" alt="Jetbrains Logo" width=48 height=48 style="vertical-align:middle"> [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
+is supporting this application's development through their [Open-Source sponsorship program.](https://www.jetbrains.com/?from=safenotes) 
 Thank you Jetbrains!
 
 ## Contributors
@@ -64,8 +64,8 @@ Frontend is using React, TailwindCSS and CryptoJs.
 Backend is using Go.
 
 # Third-party
-Icons used in frontend app made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) from [www.flaticon.com](https://www.flaticon.com/) 
-Email templates are courtesy of: [ColorlibHQ](https://github.com/ColorlibHQ/email-templates) 
+- Icons used in frontend app made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) from [www.flaticon.com](https://www.flaticon.com/) 
+- Email templates are courtesy of: [ColorlibHQ](https://github.com/ColorlibHQ/email-templates) 
 
 ## 📄 License
 Check license file found in the repository
