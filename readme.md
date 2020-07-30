@@ -60,8 +60,8 @@ Thank you Jetbrains!
 Contributors are always welcomed and contributions are appreciated. If you would like to help the project in any way please check the [contributors guidelines at contributors.md](./contributing.md).
 
 ## :technologist: Tech stack
-Frontend is using React, TailwindCSS and CryptoJs.
-Backend is using Go.
+- Frontend is using React, TailwindCSS and CryptoJs.
+- Backend is using Go.
 
 # Third-party
 - Icons used in frontend app made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) from [www.flaticon.com](https://www.flaticon.com/) 
