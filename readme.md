@@ -10,47 +10,62 @@
 ![PullRequests are Welcomed](https://img.shields.io/badge/PRs-welcome-green?style=flat-square)
 
 
-A self-hosting app that allows to quickly and securely exchange sensitive information like credentials.
+A self-hosting app that allows to quickly and securely exchange sensitive information, such as credentials.
 
-## Instalation
+<p align="center"><img src="./docs/assets/full_flow.gif" alt="Full app flow" /></p>
 
-### From Docker Hub:
-Run: ``docker run --rm -p 80:80 denisrendler/safenotes:latest serve -v``
+## Features
+- client-side only encryption and decryption of the note's content, the server receives only the encrypted note
+- link to view the note can be sent automatically via email by the application, increasing security by delivering the passphrase through a separate channel different from the one where the passphrase is sent
+- note's content has limited formatting support at the moment, with plans to add support for more specific data formatting (ie. forms for credentials, markdown editing and rendering)
+- automatic note deletion after first open or after a specific time period
+- the content is being kept secure only in-memory and removed after first read 
+- UI can be easily personalized with specific logo and email templates can be edited as needed
+- free to use in almost all situations - checkout the (License)[https://github.com/koderhut/safenotes/blob/master/LICENSE]
 
-> **Warning:** This image with default configuration should only be used for a quick test run and not production.
-> For a production mode you should take a look at the environment variables and override the configuration as needed
+## Feature that will be developed
+- credentials specific form
+- store the note on the client side during the browsing session
+- redis support for storing the notes
+- i18n support for the frontend app
+- dark theme
+- OpenAPI support for the backend
+- improved stats and monitoring
+- rate limiting for the API calls
+- add release packages for all platforms
 
-**For PRODUCTION usage you need to take the following steps:**
-1) copy the file [configs/.safenotes.yaml.example](https://github.com/koderhut/safenotes/blob/master/configs/.safenotes.yaml.example) to your host machine
+If you are considering other features that might go well with the app please let me know by creating a feature request issue.
+I plan a 1-2 months release cycle with security fixes released immediately.
 
-2) update the contents according to your needs, most of the times this means just updating the domain names
+## 🚀 Getting started
+See [installation notes in docs.](./docs/install.md)
 
-3) run the container with bind-mounts for the certificates and new config, ie: 
+## 🔧 Usage
+If you installed the application locally just run the following command:
 
-``docker run --name=safenotes --restart=unless-stoppped -v $(pwd)/certs:/safenotes/config -v $(pwd)/.safenotes.prod.yaml:/safenotes/.safenotes.yaml denisrendler/safenotes:latest``
+```
+$ ./safenotes serve
+```
 
-4) enjoy
+## Support
+Support is available through the Github Issues. If you find any bugs with the app please feel free to open an issue.
+For security issues please email me at <MAILTO:sn.security@rendler.me>
 
+## Sponsors
+I am happy to say that ![Jetbrains logo](./docs/assets/jetbrains.png) [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
+is supporting this application's development through their [Open-Source sponsorship program.](https://www.jetbrains.com/community/opensource/#support) 
+Thank you Jetbrains!
 
-### From Source:
-1) Clone the Github repository:
-``git clone https://github.com/koderhut/safenotes`` 
+## Contributors
+Contributors are always welcomed and contributions are appreciated. If you would like to help the project in any way please check the [contributors guidelines at contributors.md](./contributing.md).
 
-2) Create and configure the `.safenotes.yaml` configuration file:
-`` cp .configs/.safenotes.yaml.example ${HOME}/.safenotes.yaml ``
-
-3) Run the build command to build the Docker image: 
-``make release-docker REPO=safenotes TAG=self-hosted``
-
-4) Create a Docker container: 
-``docker run --name=safenotes -v $(pwd)/.safenotes.yaml:/safenotes/.safenotes.yaml  -v $(pwd)/certs:/safenotes/config -p 80:80 -p 443:443 safenotes:self-hosted``
-
-## Tech stack
-Frontend is built using React, TailwindCSS and CryptoJs.
-Backend is built using Go.
+## :technologist: Tech stack
+Frontend is using React, TailwindCSS and CryptoJs.
+Backend is using Go.
 
 # Third-party
 Icons used in frontend app made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) from [www.flaticon.com](https://www.flaticon.com/) 
+Email templates are courtesy of: [ColorlibHQ](https://github.com/ColorlibHQ/email-templates) 
 
-## License
+## 📄 License
 Check license file found in the repository
