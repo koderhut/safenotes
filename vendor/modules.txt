@@ -1,3 +1,9 @@
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
+# github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
+## explicit
+# github.com/emersion/go-smtp v0.13.0
+## explicit
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
 github.com/fsnotify/fsnotify
@@ -51,6 +57,8 @@ github.com/olekukonko/tablewriter
 # github.com/pelletier/go-toml v1.7.0
 ## explicit
 github.com/pelletier/go-toml
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/spf13/afero v1.2.2
 ## explicit
 github.com/spf13/afero
@@ -70,8 +78,17 @@ github.com/spf13/pflag
 # github.com/spf13/viper v1.7.0
 ## explicit
 github.com/spf13/viper
+# github.com/stretchr/objx v0.1.1
+github.com/stretchr/objx
+# github.com/stretchr/testify v1.6.1
+## explicit
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
+# github.com/xhit/go-simple-mail/v2 v2.4.0
+## explicit
+github.com/xhit/go-simple-mail/v2
 # golang.org/x/sys v0.0.0-20200509044756-6aff5f38e54f
 ## explicit
 golang.org/x/sys/internal/unsafeheader
@@ -79,6 +96,8 @@ golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
+# gopkg.in/go-playground/assert.v1 v1.2.1
+## explicit
 # gopkg.in/go-playground/validator.v9 v9.31.0
 ## explicit
 gopkg.in/go-playground/validator.v9
@@ -87,3 +106,5 @@ gopkg.in/go-playground/validator.v9
 gopkg.in/ini.v1
 # gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2
+# gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+gopkg.in/yaml.v3

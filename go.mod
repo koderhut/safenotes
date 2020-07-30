@@ -3,6 +3,8 @@ module github.com/koderhut/safenotes
 go 1.14
 
 require (
+	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21 // indirect
+	github.com/emersion/go-smtp v0.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
@@ -20,7 +22,10 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
+	github.com/stretchr/testify v1.6.1
+	github.com/xhit/go-simple-mail/v2 v2.4.0
 	golang.org/x/sys v0.0.0-20200509044756-6aff5f38e54f // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/ini.v1 v1.56.0 // indirect
 )
