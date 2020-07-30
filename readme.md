@@ -52,7 +52,7 @@ Support is available through the Github Issues. If you find any bugs with the ap
 For security issues please email me at <MAILTO:sn.security@rendler.me>
 
 ## Sponsors
-I am happy to say that <img src="./docs/assets/jetbrains.png" alt="Jetbrains Logo" width=48 height=48 style="vertical-align:middle"> [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
+I am happy to say that <img src="./docs/assets/jetbrains.png" alt="Jetbrains Logo" width=48 height=48 style="vertical-align:middle;"> [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
 is supporting this application's development through their [Open-Source sponsorship program.](https://www.jetbrains.com/?from=safenotes) 
 Thank you Jetbrains!
 
