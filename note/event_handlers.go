@@ -54,7 +54,10 @@ func RegisterSubscribers(broker events.Broker) {
 				notify.WithMessage(message),
 				notify.WithSubject("You received a new SafeNote"),
 			)
-			comm.Send() // TODO: add error logging
+			err = comm.Send()
+			if err != nil {
+				logs.Writer.Error(err.Error())
+			}
 		}
 	}))
 
@@ -75,7 +78,10 @@ func RegisterSubscribers(broker events.Broker) {
 				notify.WithMessage(message),
 				notify.WithSubject("Your SafeNote has been opened"),
 			)
-			comm.Send() // TODO: add error logging
+			err = comm.Send()
+			if err != nil {
+				logs.Writer.Error(err.Error())
+			}
 		}
 	}))
 }
