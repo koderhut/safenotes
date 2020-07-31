@@ -50,7 +50,7 @@ static-site:
 sketch:
   templatesDir: resources/templates/email
   functions:
-    generateLink: https://localhost:3000/app/view-note/%s
+    generateLink: http://localhost/app/view-note/%s
 
 notifications:
   enable: false
