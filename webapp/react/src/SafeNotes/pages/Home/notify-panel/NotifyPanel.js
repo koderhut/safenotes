@@ -31,7 +31,7 @@ const NotifyPanel = ({ form, changeEv }) => {
            defaultOpen={true}
     >
       <Email name={"emailRecipient"} labelText="Recipient E-mail" placeholder="Recipient E-mail" changeEv={changeEv} email={form.emailRecipient} wrapCss={['sm:mr-1']} />
-      <Email name={"emailSender"} labelText="Notify Me On E-mail After Open" placeholder="Open Notification E-mail" changeEv={changeEv} email={form.emailSender} />
+      <Email name={"emailSender"} labelText="Notify Me After Open" placeholder="Open Notification E-mail" changeEv={changeEv} email={form.emailSender} />
     </Panel>
   );
 };
