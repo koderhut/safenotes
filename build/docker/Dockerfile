@@ -45,6 +45,7 @@ COPY --from=build_fe /project/build/ /safenotes/www
 COPY --from=build_be /project/dist/safenotes /safenotes/safenotes
 COPY --from=build_be /project/.safenotes.build.yaml /safenotes/.safenotes.yaml
 COPY --from=build_be /project/resources /safenotes/resources
+COPY --from=build_be /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 WORKDIR /safenotes
 
