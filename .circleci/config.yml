@@ -24,7 +24,7 @@ jobs:
       - checkout
       - run:
           name:    Prepare .safenote.yaml
-          command: cp configs/.safenotes.yaml.example .safenotes.build.yaml
+          command: cp configs/safenotes.example.yaml .safenotes.build.yaml
       - run:
           name:    Prepare .env.production
           command: cp configs/react.env.example webapp/react/.env.production
