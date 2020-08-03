@@ -49,7 +49,7 @@ $ ./safenotes serve
 
 ## Support
 Support is available through the Github Issues. If you find any bugs with the app please feel free to open an issue.
-For security issues please email me at <MAILTO:sn.security@rendler.me>
+For security issues please check the [security.md file](./security.md)
 
 ## Sponsors
 I am happy to say that <img src="./docs/assets/jetbrains.png" alt="Jetbrains Logo" width=48 height=48 style="vertical-align:middle;"> [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
