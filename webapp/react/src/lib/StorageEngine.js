@@ -15,11 +15,13 @@
  */
 
 import Axios from "axios";
+import Cache from "./Cache";
 
 class StorageEngine {
     static #ROUTE_NOTES = "/notes";
 
     client = "";
+    cache = new Cache();
 
     constructor(storagePath) {
         this.client = Axios.create({
@@ -36,7 +38,24 @@ class StorageEngine {
     }
 
     fetch(path, params = {}) {
-        return this.client.get(StorageEngine.#ROUTE_NOTES + "/" + path, {...params});
+        return new Promise((resolve, reject) => {
+            let cached = this.cache.fetch(path, false);
+
+            if (false === cached) {
+                this.client.get(StorageEngine.#ROUTE_NOTES + "/" + path, {...params})
+                    .then((response) => {
+                      this.cache.store(path, response.data['content']);
+
+                      resolve(this.cache.fetch(path, false));
+                    })
+                    .catch((err) => reject(err))
+                ;
+
+                return;
+            }
+
+            resolve(cached);
+        });
     }
 }
 

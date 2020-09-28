@@ -40,8 +40,8 @@ const NoteView = () => {
   useEffect(() => {
     storage
       .fetch(noteId)
-      .then(function (res) {
-        setLockedNote(res.data['content']);
+      .then(function (resource) {
+        setLockedNote(resource.payload);
       })
       .catch(function (err) {
         console.log(err);
@@ -51,7 +51,7 @@ const NoteView = () => {
 
   const onNoteUnlocked = (content) => {
     if (content === '') {
-      setUnlockedNote('Empty Note Contents Or The Passphrase Was Wrong!');
+      setUnlockedNote('The Passphrase Entered Was Wrong! Reload The Page And Try Again.');
       return;
     }
 
@@ -100,8 +100,8 @@ const NoteView = () => {
       <PinnedMessage>
         <Block classes={['flex', 'flex-col']}>
           <p className="text-sm sm:text-lg md:text-lg lg:text-lg font-bold">WARNING!</p>
-          <p className="text-xs sm:text-sm md:text-base lg:text-bas">Please make sure you save this note in a safe place before leaving or reloading the page.
-            <br/> Your secret has been <strong>DELETED</strong> from the storage and cannot be recovered!
+          <p className="text-xs sm:text-sm md:text-base lg:text-bas">Please make sure you save this note in a safe place before leaving the page.
+            <br/> Your secret has been <strong>DELETED</strong> from our storage and cannot be recovered!
           </p>
         </Block>
       </PinnedMessage>
