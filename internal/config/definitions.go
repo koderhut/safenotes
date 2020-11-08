@@ -27,7 +27,7 @@ type Parameters struct {
 	StaticSite    StaticSite `mapstructure:"static-site"`
 	Verbose       bool
 	Notifications notify.Config
-	Sketch 		  sketch.Config
+	Sketch        sketch.Config
 }
 
 // Parameters for configuring the server part
@@ -70,7 +70,20 @@ type StaticSite struct {
 	Serve     bool
 	Index     string `mapstructure:"index"`
 	Resources string
-	EnvJs     string `mapstructure:"envjs"`
+	EnvJs     EnvJs `mapstructure:"envjs"`
+}
+
+type EnvJs struct {
+	Web struct {
+		Domain      string `json:"domain"`
+		StoragePath string `json:"storage_path" mapstructure:"storage-path"`
+	} `json:"web"`
+	Theme struct {
+		Logo struct {
+			Image    string   `json:"image"`
+			ImageCss []string `json:"imageCss"`
+		} `json:"logo"`
+	} `json:"theme"`
 }
 
 // web api general configuration options

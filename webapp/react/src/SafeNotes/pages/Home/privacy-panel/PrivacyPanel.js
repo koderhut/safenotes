@@ -24,13 +24,13 @@ import AutoExpire from './AutoExpire';
 import Passphrase from './Passphrase';
 
 const PrivacyPanel = ({ form, changeEv }) => {
-  const { web: webCfg } = useContext(ConfigContext);
+  const { expirationOptions } = useContext(ConfigContext);
 
   return (
     <Panel title={'Privacy'} wrapCss={['my-4']} viewPortCss={['flex flex-col sm:flex-row']} titleBarCss={['text-base text-blue-400 font-bold pl-2 border border-blue-200 shadow-sm rounded-sm relative p-2']}>
       <Passphrase passphrase={form.passphrase} confirm={form.confirmPassphrase} changeEv={changeEv}/>
 
-      <AutoExpire options={webCfg.expirationOptions} selected={form.autoExpire} onChange={changeEv}/>
+      <AutoExpire options={expirationOptions} selected={form.autoExpire} onChange={changeEv}/>
     </Panel>
   );
 };

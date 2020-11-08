@@ -56,7 +56,7 @@ func NewConfigParams() *Parameters {
 			Serve:     false,
 			Index:     "index.html",
 			Resources: "./www",
-			EnvJs:     "window.envjs = {};",
+			EnvJs:     EnvJs{},
 		},
 	}
 }
