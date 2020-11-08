@@ -14,48 +14,41 @@
  * limitations under the License.
  */
 
-import Axios from "axios";
-import Cache from "./Cache";
+import Axios from 'axios';
+import Cache from './Cache';
 
 class StorageEngine {
-    static #ROUTE_NOTES = "/notes";
+    static #ROUTE_NOTES = '/notes';
 
-    client = "";
-    cache = new Cache();
+    client = '';
+    cache  = new Cache();
 
-    constructor(storagePath) {
+    constructor (storagePath) {
         this.client = Axios.create({
             baseURL: storagePath,
             timeout: 1000,
-            headers: {"X-App": "SafeNotes"},
+            headers: { 'X-App': 'SafeNotes' },
         });
     }
 
-    store(params) {
+    store (params) {
         return this.client.post(StorageEngine.#ROUTE_NOTES, {}, {
             data: params,
         });
     }
 
-    fetch(path, params = {}) {
-        return new Promise((resolve, reject) => {
-            let cached = this.cache.fetch(path, false);
+    async fetch (path, params = {}) {
+        let cached = this.cache.fetch(path, false);
 
-            if (false === cached) {
-                this.client.get(StorageEngine.#ROUTE_NOTES + "/" + path, {...params})
-                    .then((response) => {
-                      this.cache.store(path, response.data['content']);
+        if (false === cached) {
+            await this.client.get(StorageEngine.#ROUTE_NOTES + '/' + path, { ...params })
+                .then((response) => {
+                    this.cache.store(path, response.data['content']);
+                })
+            ;
+        }
 
-                      resolve(this.cache.fetch(path, false));
-                    })
-                    .catch((err) => reject(err))
-                ;
-
-                return;
-            }
-
-            resolve(cached);
-        });
+        return this.cache.fetch(path, false);
     }
 }
 
