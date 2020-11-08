@@ -16,6 +16,8 @@ limitations under the License.
 package staticsite
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -92,5 +94,12 @@ func (sw StaticSite) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (sw StaticSite) envJs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
 
-	w.Write([]byte(sw.config.EnvJs))
+	var buf bytes.Buffer
+	buf.WriteString("window.snenv=")
+	encoder := json.NewEncoder(&buf)
+	err := encoder.Encode(sw.config.EnvJs)
+	if err != nil {
+		logs.Writer.Info(fmt.Sprintf(err.Error()))
+	}
+	buf.WriteTo(w)
 }

@@ -24,28 +24,14 @@ static-site:
   serve:     true
   index:     index.html
   resources: ./www
-  envjs:     |
-     window.snenv={
-       "web":{
-         "domain":"http://localhost/app",
-         "storage_path":"http://localhost/api",
-         "expirationOptions": [
-             {"value": "on-read", "text": "After Opening"},
-             {"value": "5m", "text": "5 minutes"},
-             {"value": "30m", "text": "30 minutes"},
-             {"value": "1h", "text": "1 hour"},
-             {"value": "24h", "text": "1 day"},
-             {"value": "48h", "text": "2 days"},
-             {"value": "168h", "text": "7 days"}
-         ]
-       },
-       "theme": {
-           "logo": {
-               "image": "/app/new-logo.png",
-               "imageCss": ['object-contain h-36 w-48 pt-2']
-           }
-       }
-     }
+  envjs:
+     web:
+       domain: "http://localhost/app"
+       storage_path: "http://localhost/api"
+       theme:
+         logo:
+           image: "/app/new-logo.png"
+           imageCss: ['object-contain h-36 w-48 pt-2']
 
 sketch:
   templatesDir: resources/templates/email

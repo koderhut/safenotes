@@ -18,6 +18,16 @@ import React from "react";
 
 // here we store default values that do not change across envs
 // IMPORTANT: first level vars will be overridden and NOT merged
-export const config = {};
+export const config = {
+    "expirationOptions": [
+        {"value": "on-read", "text": "After Opening"},
+        {"value": "5m", "text": "5 minutes"},
+        {"value": "30m", "text": "30 minutes"},
+        {"value": "1h", "text": "1 hour"},
+        {"value": "24h", "text": "1 day"},
+        {"value": "48h", "text": "2 days"},
+        {"value": "168h", "text": "7 days"}
+    ]
+};
 
 export const ConfigContext = React.createContext(config);

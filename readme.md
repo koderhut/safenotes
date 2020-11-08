@@ -35,7 +35,7 @@ A self-hosting app that allows to quickly and securely exchange sensitive inform
 - add release packages for all platforms
 
 If you are considering other features that might go well with the app please let me know by creating a feature request issue.
-I plan a 1-2 months release cycle with security fixes released immediately.
+I plan to release as soon as a feature is done with security fixes released immediately.
 
 ## 🚀 Getting started
 See [installation notes in docs.](./docs/install.md)
@@ -52,7 +52,9 @@ Support is available through the Github Issues. If you find any bugs with the ap
 For security issues please check the [security.md file](./security.md)
 
 ## Sponsors
-I am happy to say that <img src="./docs/assets/jetbrains.png" alt="Jetbrains Logo" width=48 height=48 style="vertical-align:middle;"> [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
+<img src="./docs/assets/jetbrains.png" alt="Jetbrains Logo" width=48 height=48 style="vertical-align:middle;">  
+
+I am happy to say that [Jetbrains](https://www.jetbrains.com/?from=safenotes) 
 is supporting this application's development through their [Open-Source sponsorship program.](https://www.jetbrains.com/?from=safenotes) 
 Thank you Jetbrains!
 

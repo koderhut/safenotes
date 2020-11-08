@@ -7,3 +7,4 @@ webapp/react/.env.local
 webapp/react/public/env.js
 /.safenotes.*.yaml
 built/
+.safenotes.*.yaml
