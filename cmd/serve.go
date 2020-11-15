@@ -33,6 +33,7 @@ import (
 	"github.com/koderhut/safenotes/internal/utilities/logs"
 	"github.com/koderhut/safenotes/note"
 	"github.com/koderhut/safenotes/notification"
+	"github.com/koderhut/safenotes/pkg/version"
 	"github.com/koderhut/safenotes/staticsite"
 	"github.com/koderhut/safenotes/webapp"
 )
@@ -51,6 +52,8 @@ expose the API endpoints for the service
 		evStream := events.NewBroker()
 		apiRoutes := []webapp.WebRouting{note.NewWebApi(note.NewMemoryRepo(), evStream)}
 		rootRoutes := make([]webapp.WebRouting, 0)
+
+		logs.Writer.Info(fmt.Sprintf("Running version: %s", version.Version))
 
 		if cfg.StaticSite.Serve == true {
 			rootRoutes = append(rootRoutes, staticsite.NewHandler(cfg.StaticSite))
@@ -116,7 +119,7 @@ func printRegisteredRoutes(router *mux.Router) {
 }
 
 func init() {
-	serveCmd.Flags().Bool("ssl", false, "Enable HTTPS")
+	// serveCmd.Flags().Bool("ssl", false, "Enable HTTPS")
 
 	rootCmd.AddCommand(serveCmd)
 }
