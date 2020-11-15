@@ -11,12 +11,12 @@ COVERAGEDIR=./dist/coverage
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 $(GOBUILD) -ldflags="-extldflags=-static" -o dist/$(BINARY_NAME) .
+	CGO_ENABLED=0 $(GOBUILD) -ldflags="-extldflags=-static -X github.com/koderhut/safenotes/pkg/version.Version=${TAG}" -o dist/$(BINARY_NAME) .
 
 .PHONY: release-docker
 release-docker:
 	@if [ ! -f '.safenotes.build.yaml' ]; then echo ">>> Missing .safenotes.build.yaml" && exit 1; fi;
-	DOCKER_BUILDKIT=1 docker build --target PROD -f build/docker/Dockerfile ${OPTS} --tag ${REPO}:${TAG} .
+	DOCKER_BUILDKIT=1 docker build --target PROD -f build/docker/Dockerfile ${OPTS} --build-arg VERSION=${TAG} --tag ${REPO}:${TAG} .
 
 .PHONY: react-dev
 react-dev:

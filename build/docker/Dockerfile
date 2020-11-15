@@ -22,6 +22,10 @@ COPY webapp/react /project
 WORKDIR /project
 # very heavy and time consuming process so try to take it from cache
 RUN yarn install
+
+ARG VERSION="0.0.0-DEV"
+ENV REACT_APP_SAFENOTES_RELEASE=${VERSION}
+
 RUN yarn build-prod
 
 # build the backend app
@@ -29,13 +33,15 @@ FROM golang:latest as build_be
 COPY ./ /project
 WORKDIR /project
 
-RUN make build \
+ARG VERSION="0.0.0-DEV"
+
+RUN make build TAG=${VERSION} \
     && chmod +x /project/dist/safenotes
 
 # build the production final image
 FROM scratch as PROD
 
-ARG VERSION="0.1.0"
+ARG VERSION="0.0.0-DEV"
 
 LABEL "Maintainer"="Denis Rendler <connect@rendler.me>" \
       "App"="SafeNotes" \
