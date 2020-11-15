@@ -20,6 +20,8 @@ jobs:
 
   release-docker-image-version:
     executor: golang-exec
+    environment:
+      REACT_APP_SAFENOTES_RELEASE:<< pipeline.git.tag >>
     steps:
       - checkout
       - run:

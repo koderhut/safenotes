@@ -7,7 +7,6 @@ module.exports = function({ env }) {
                     require('autoprefixer'),
                 ]
             }
-
         }
     };
 }
