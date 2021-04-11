@@ -74,7 +74,8 @@ type StaticSite struct {
 }
 
 type EnvJs struct {
-	Web struct {
+	Cache bool `json:"cache"`
+	Web   struct {
 		Domain      string `json:"domain"`
 		StoragePath string `json:"storage_path" mapstructure:"storage-path"`
 	} `json:"web"`

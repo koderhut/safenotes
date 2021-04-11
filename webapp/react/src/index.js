@@ -20,17 +20,20 @@ import ReactDOM from 'react-dom';
 import { config, ConfigContext } from './SafeNotes/context/Config';
 import StorageEngine from './lib/StorageEngine';
 import SafeNotes from './SafeNotes';
+import NullCache from './lib/NullCache';
+import Cache from './lib/Cache';
 
+const cacheEngine = window.snenv.cache ? new Cache(): new NullCache();
 let AppConfig = {
   ...config,
   ...window.snenv,
-  storage: new StorageEngine(window.snenv.web.storage_path),
+  storage: new StorageEngine(window.snenv.web.storage_path, cacheEngine),
 };
 
 ReactDOM.render(
   <React.StrictMode>
     <ConfigContext.Provider value={AppConfig}>
-      <SafeNotes/>
+      <SafeNotes />
     </ConfigContext.Provider>
   </React.StrictMode>,
   document.getElementById('root'),

@@ -15,20 +15,19 @@
  */
 
 import Axios from 'axios';
-import Cache from './Cache';
 
 class StorageEngine {
     static #ROUTE_NOTES = '/notes';
 
     client = '';
-    cache  = new Cache();
 
-    constructor (storagePath) {
+    constructor (storagePath, cacheEngine) {
         this.client = Axios.create({
             baseURL: storagePath,
             timeout: 1000,
             headers: { 'X-App': 'SafeNotes' },
         });
+        this.cache = cacheEngine;
     }
 
     store (params) {

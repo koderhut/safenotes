@@ -25,13 +25,14 @@ static-site:
   index:     index.html
   resources: ./www
   envjs:
-     web:
-       domain: "http://localhost/app"
-       storage-path: "http://localhost/api"
-       theme:
-#         logo:
-#           image: "/app/new-logo.png"
-#           imageCss: ['object-contain h-36 w-48 pt-2']
+    cache: true
+    web:
+      domain: "http://localhost/app"
+      storage-path: "http://localhost/api"
+      theme:
+#        logo:
+#          image: "/app/new-logo.png"
+#          imageCss: ['object-contain h-36 w-48 pt-2']
 
 sketch:
   templatesDir: resources/templates/email
