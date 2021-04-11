@@ -30,21 +30,21 @@ func NewConfigParams() *Parameters {
 	return &Parameters{
 		Verbose: false,
 		Server: ServerParams{
-			IP:      defaultIp,
-			Port:    defaultPort,
+			IP:   defaultIp,
+			Port: defaultPort,
 			Https: Https{
-				Enable:     true,
-				Port:       defaultHttpsPort,
-				Cert:       "./config/cert.pem",
-				CertKey:    "./config/key.pem",
-				ServerName: "localhost",
+				Enable:         true,
+				Port:           defaultHttpsPort,
+				Cert:           "./config/cert.pem",
+				CertKey:        "./config/key.pem",
+				ServerName:     "localhost",
 				EnableRedirect: true,
-				RedirectTo: "https://localhost",
+				RedirectTo:     "https://localhost",
 			},
 			Auth: Auth{
 				Realm: "localhost - Restricted",
-				User: "",
-				Pass: "",
+				User:  "",
+				Pass:  "",
 			},
 		},
 		Api: ApiParams{
@@ -56,7 +56,9 @@ func NewConfigParams() *Parameters {
 			Serve:     false,
 			Index:     "index.html",
 			Resources: "./www",
-			EnvJs:     EnvJs{},
+			EnvJs: EnvJs{
+				Cache: true,
+			},
 		},
 	}
 }
