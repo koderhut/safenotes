@@ -26,6 +26,8 @@ RUN yarn install
 ARG VERSION="0.0.0-DEV"
 ENV REACT_APP_SAFENOTES_RELEASE=${VERSION}
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 RUN yarn build-prod
 
 # build the backend app
