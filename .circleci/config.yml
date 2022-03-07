@@ -5,7 +5,7 @@ version: 2.1
 executors:
   golang-exec:
     docker:
-      - image: circleci/golang:1.17.6
+      - image: circleci/golang:1.17.5
         user:  root
     working_directory: /safenotes
 
