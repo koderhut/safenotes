@@ -31,9 +31,7 @@ class StorageEngine {
     }
 
     store (params) {
-        return this.client.post(StorageEngine.#ROUTE_NOTES, {}, {
-            data: params,
-        });
+        return this.client.post(StorageEngine.#ROUTE_NOTES, params);
     }
 
     async fetch (path, params = {}) {
