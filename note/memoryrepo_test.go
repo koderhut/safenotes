@@ -43,7 +43,7 @@ func TestMemoryRepo_FetchByID(t *testing.T) {
 			n := NewNote(func(note *Note) {
 				note.Content = tt.content
 			})
-			 _, _ = s.Store(n)
+			_, _ = s.Store(n)
 
 			id := tt.testId
 			if id == "" {
@@ -148,7 +148,7 @@ func TestMemoryRepo_StoreWithTimeout(t *testing.T) {
 		expire  string
 		err     string
 	}{
-		{"store into repo with bad duration", "test_content", "abc", "time: invalid duration abc"},
+		{"store into repo with bad duration", "test_content", "abc", "time: invalid duration \"abc\""},
 	}
 
 	for _, tt := range tests {

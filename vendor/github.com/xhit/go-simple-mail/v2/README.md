@@ -47,15 +47,18 @@ Go Simple Mail supports:
 
 - Multiple Attachments with path
 - Multiple Attachments in base64
+- Multiple Attachments from bytes (since v2.6.0)
+- Inline attachments from file, base64 and bytes (bytes since v2.6.0)
 - Multiple Recipients
 - Priority
 - Reply to
-- Set other sender
-- Set other from
+- Set sender
+- Set from
+- Allow sending mail with different envelope from (since v2.7.0)
 - Embedded images
 - HTML and text templates
 - Automatic encoding of special characters
-- SSL and TLS
+- SSL/TLS and STARTTLS
 - Unencrypted connection (not recommended)
 - Sending multiple emails with the same SMTP connection (Keep Alive or Persistent Connection)
 - Timeout for connect to a SMTP Server
@@ -67,6 +70,8 @@ Go Simple Mail supports:
 - Send NOOP, RESET, QUIT and CLOSE to SMTP client
 - PLAIN, LOGIN and CRAM-MD5 Authentication (since v2.3.0)
 - Custom TLS Configuration (since v2.5.0)
+- Send a RFC822 formatted message (since v2.8.0)
+- Send from localhost (yes, Go standard SMTP package cannot do that because... WTF Google!)
 
 ## Documentation
 
@@ -111,7 +116,7 @@ func main() {
 	server.Port = 587
 	server.Username = "test@example.com"
 	server.Password = "examplepass"
-	server.Encryption = mail.EncryptionTLS
+	server.Encryption = mail.EncryptionSTARTTLS
 
 	// Since v2.3.0 you can specified authentication type:
 	// - PLAIN (default)
@@ -148,7 +153,16 @@ func main() {
 
 	email.SetBody(mail.TextHTML, htmlBody)
 
-	email.AddInline("/path/to/image.png", "Gopher.png")
+	// also you can add body from []byte with SetBodyData, example:
+	// email.SetBodyData(mail.TextHTML, []byte(htmlBody))
+
+	// add inline
+	email.Attach(&mail.File{FilePath: "/path/to/image.png", Name:"Gopher.png", Inline: true})
+
+	// always check error after send
+	if email.Error != nil{
+		log.Fatal(email.Error)
+	}
 
 	// Call Send and pass the client
 	err = email.Send(smtpClient)
@@ -178,7 +192,14 @@ func main() {
 			SetSubject("New Go Email")
 
 		email.SetBody(mail.TextHTML, htmlBody)
-		email.AddInline("/path/to/image.png", "Gopher.png")
+
+		// add inline
+		email.Attach(&mail.File{FilePath: "/path/to/image.png", Name:"Gopher.png", Inline: true})
+
+		// always check error after send
+		if email.Error != nil{
+			log.Fatal(email.Error)
+		}
 
 		// Call Send and pass the client
 		err = email.Send(smtpClient)
