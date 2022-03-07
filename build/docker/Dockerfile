@@ -16,7 +16,7 @@
 #####
 
 # build the front-end app
-FROM node:latest as build_fe
+FROM node:17.0.1 as build_fe
 
 COPY webapp/react /project
 WORKDIR /project
